@@ -315,3 +315,32 @@ main{margin:0 auto 0;}
 .fifaHelperBody textarea::placeholder,.fifaHelperBody input::placeholder{color:#94a3b8}.fifaHelperBody label{display:block;margin:14px 0 8px;color:#e2e8f0;font-weight:900}.helperStats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:10px 0 14px}.helperStats span{background:#0f253f;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px;text-align:center;font-weight:900;color:#eaf4ff}.playerPreviewBox .dataTable td[contenteditable="true"]{background:rgba(255,255,255,.08);outline:1px dashed rgba(56,189,248,.25)}.cleanList.numberedList{counter-reset:item;list-style:none;padding-left:0}.cleanList.numberedList li{margin:10px 0;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
 .gameArea,.gameStage,.quizCard,.flagGamePanel{background:linear-gradient(180deg,#f8fafc,#e6eef7)!important;color:#0f172a!important}.gameArea h2,.gameArea h3,.gameArea p,.gameStage h2,.gameStage h3,.gameStage p,.quizCard h2,.quizCard h3,.quizCard p{color:#0f172a!important}.answerBtn,.gameAnswer,.choiceBtn{background:#ffffff!important;color:#0f172a!important;border:2px solid #cbd5e1!important;box-shadow:0 8px 22px rgba(15,23,42,.08)!important}.answerBtn:hover,.gameAnswer:hover,.choiceBtn:hover{border-color:#38bdf8!important;background:#ecfeff!important}.scoreBox,.gameStat{background:#ffffff!important;color:#0f172a!important;border:1px solid #cbd5e1!important}.feedbackBox,.gameFeedback{background:#dbeafe!important;color:#0f172a!important;border:1px solid #93c5fd!important}.feedbackBox.correct,.gameFeedback.correct{background:#dcfce7!important;border-color:#86efac!important}.feedbackBox.wrong,.gameFeedback.wrong{background:#fee2e2!important;border-color:#fca5a5!important}
 @media(max-width:800px){.helperStats{grid-template-columns:1fr 1fr}.teacherGrid.twoCol{grid-template-columns:1fr}}
+
+/* v0.9.2 — Sögusafn HM */
+.historyBody{background:radial-gradient(circle at 15% 0%,#183b6b 0,#07182d 42%,#050914 100%);color:#f8fafc;}
+.historyHero{background:radial-gradient(circle at 20% 10%,rgba(255,209,102,.28),transparent 28%),linear-gradient(135deg,#07182d,#102a52 58%,#331b46);}
+.historyHeroContent{max-width:1100px;}
+.historyDeepPreview{background:linear-gradient(135deg,rgba(255,209,102,.12),rgba(56,189,248,.08)),rgba(18,40,70,.96);}
+.historyStarter{margin-top:clamp(24px,4vw,50px);}
+.historySpotlight{background:linear-gradient(135deg,#fff7ed,#eff6ff);color:#102033;border:1px solid rgba(255,255,255,.5);border-radius:24px;padding:22px;box-shadow:0 18px 40px rgba(0,0,0,.18);font-weight:750;}
+.historySpotlight h3{font-size:clamp(1.5rem,3vw,2.3rem);margin:.25rem 0 .65rem;color:#0f172a;}
+.historyGrid,.profileGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
+.timelineGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;}
+.historyCard,.timelineCard,.profileCard,.assignmentCard{background:linear-gradient(180deg,#ffffff,#f1f7ff);color:#142033;border:1px solid rgba(148,163,184,.22);border-radius:22px;padding:18px;box-shadow:0 14px 35px rgba(0,0,0,.18);}
+.historyCard h3,.timelineCard h3,.profileCard h3{margin:.35rem 0 .55rem;color:#081a31;font-size:1.25rem;}
+.historyYear{display:inline-flex;align-items:center;justify-content:center;min-width:70px;padding:8px 12px;border-radius:999px;background:#0b70c9;color:#fff;font-weight:1000;box-shadow:0 10px 24px rgba(11,112,201,.18);}
+.historyTeams{font-weight:1000;color:#0f6f4f;margin:.25rem 0;}
+.historyPlace{color:#64748b;font-weight:800;margin:.2rem 0 .7rem;}
+.historyQuestion{margin-top:14px;padding:12px 14px;border-radius:16px;background:#e0f2fe;border:1px solid #bae6fd;color:#0f172a;font-weight:900;}
+.topicPill{display:inline-flex;width:max-content;align-items:center;margin:.55rem 0;padding:7px 10px;border-radius:999px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-weight:1000;font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;}
+.profileTop{display:flex;gap:12px;align-items:center;margin-bottom:10px;}
+.profileTop p{margin:2px 0 0;color:#64748b;font-weight:850;}
+.avatarCircle{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#38bdf8,#22c55e);color:#fff;font-weight:1000;box-shadow:0 12px 26px rgba(0,0,0,.15);}
+.avatarCircle.coach{background:linear-gradient(135deg,#f59e0b,#ef4444);}
+.assignmentGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.assignmentCard{display:grid;grid-template-columns:44px 1fr;align-items:center;gap:12px;background:#f8fafc;}
+.assignmentCard span{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#0f6f4f;color:#fff;font-weight:1000;}
+.assignmentCard p{margin:0;font-weight:850;color:#102033;}
+@media(max-width:1050px){.historyGrid,.profileGrid,.timelineGrid{grid-template-columns:repeat(2,minmax(0,1fr));}.assignmentGrid{grid-template-columns:1fr;}}
+@media(max-width:720px){.historyGrid,.profileGrid,.timelineGrid{grid-template-columns:1fr;}.historyCard,.timelineCard,.profileCard{padding:16px;}}
+@media print{.historyBody .topbar,.historyHero,.guideActions,footer,#randomHistoryBtn{display:none!important}.historyBody{background:#fff;color:#111}.historyCard,.timelineCard,.profileCard,.assignmentCard,.historySpotlight{box-shadow:none;break-inside:avoid}.historyGrid,.profileGrid,.timelineGrid{grid-template-columns:repeat(2,1fr)}.panel{box-shadow:none;border:none;margin:0 0 18px;padding:0}}

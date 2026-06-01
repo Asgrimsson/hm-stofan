@@ -186,3 +186,37 @@ Ferli fyrir leikmannalista:
 8. Commit + push.
 
 Leikjasalur fékk einnig sterkari birtuskil í Fánaleiknum.
+
+## v0.9.2 — Sögusafn HM
+
+Bætt við:
+
+- `sagan.html` — sérstakt sögusafn um HM.
+- `data/history_extended.json` — frægir leikir, atburðir, leikmenn, þjálfarar, stuðningsmenn og verkefni.
+- Tengill á sögusafn á forsíðu.
+- Handahófsval: „Velja handahófs sögu“ fyrir umræðu eða verkefni dagsins.
+- Verkefnabanki fyrir íslensku, samfélagsfræði, ensku og gagnalæsi.
+
+CMD uppfærsla:
+
+```cmd
+cd C:\hm-stofan-v01
+git status
+git add index.html sagan.html styles.css README.md data/history_extended.json
+git commit -m "Add v0.9.2 sogusafn HM"
+git pull --rebase origin main
+git push
+```
+
+Prófun local:
+
+```cmd
+cd C:\hm-stofan-v01
+python -m http.server 8000
+```
+
+Opna:
+
+```text
+http://localhost:8000/sagan.html
+```

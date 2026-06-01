@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sögusafn HM | HM-stofan</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="historyBody">
+  <header class="hero historyHero">
+    <nav class="topbar">
+      <div class="brand"><span class="ball">⚽</span><span>HM-stofan 2026</span></div>
+      <div class="navlinks">
+        <a href="index.html">Forsíða</a>
+        <a href="sagan.html">Sögusafn</a>
+        <a href="frettastofa.html">Fréttastofa</a>
+        <a href="verkefni.html">Verkefni</a>
+        <a href="leikjasalur.html">Leikjasalur</a>
+        <a href="kennarabord.html">Kennaraborð</a>
+      </div>
+    </nav>
+    <section class="heroContent historyHeroContent">
+      <p class="eyebrow">Nýtt í v0.9.2</p>
+      <h1>Sögusafn HM</h1>
+      <p class="lead">Frægir leikir, ógleymanlegir atburðir, leikmenn, þjálfarar og stuðningsmenn. Notaðu safnið sem kveikju í umræðu, verkefnavinnu og fréttaskrifum.</p>
+      <div class="guideActions">
+        <a class="primaryBtn linkBtn" href="#matches">Frægir leikir</a>
+        <a class="ghostBtn linkBtn" href="#events">Atburðir</a>
+        <a class="ghostBtn linkBtn" href="#players">Leikmenn</a>
+        <a class="ghostBtn linkBtn" href="#coaches">Þjálfarar</a>
+        <a class="ghostBtn linkBtn" href="#supporters">Stuðningsmenn</a>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="panel historyStarter">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Notkun í kennslu</p>
+          <h2>Veldu sögu og breyttu henni í verkefni</h2>
+          <p class="hint">Nemendur geta valið atburð, unnið stutta rannsókn, skrifað frétt, gert tímalínu eða haldið örkynningu fyrir hópinn.</p>
+        </div>
+        <button class="primaryBtn" id="randomHistoryBtn">Velja handahófs sögu</button>
+      </div>
+      <div id="randomHistoryBox" class="historySpotlight">Smelltu á hnappinn til að fá sögu, spurningu og verkefnahugmynd.</div>
+    </section>
+
+    <section id="matches" class="panel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Frægir leikir</p>
+          <h2>Leikir sem breyttu sögunni</h2>
+        </div>
+      </div>
+      <div id="famousMatches" class="historyGrid"></div>
+    </section>
+
+    <section id="events" class="panel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Atburðir</p>
+          <h2>Stóru augnablikin utan vallar og innan</h2>
+        </div>
+      </div>
+      <div id="historyEvents" class="timelineGrid"></div>
+    </section>
+
+    <section id="players" class="panel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Leikmenn</p>
+          <h2>Stjörnur sem mótuðu HM</h2>
+        </div>
+      </div>
+      <div id="historyPlayers" class="profileGrid"></div>
+    </section>
+
+    <section id="coaches" class="panel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Þjálfarar</p>
+          <h2>Leiðtogar á hliðarlínunni</h2>
+        </div>
+      </div>
+      <div id="historyCoaches" class="profileGrid"></div>
+    </section>
+
+    <section id="supporters" class="panel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Stuðningsmenn</p>
+          <h2>Stemningin sem verður hluti af sögunni</h2>
+        </div>
+      </div>
+      <div id="historySupporters" class="historyGrid"></div>
+    </section>
+
+    <section id="historyAssignments" class="panel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Verkefnabanki</p>
+          <h2>Skemmtileg sögutengd verkefni</h2>
+        </div>
+        <button class="ghostBtn" onclick="window.print()">Prenta síðu</button>
+      </div>
+      <div id="historyAssignmentsList" class="assignmentGrid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>HM-stofan v0.9.2 · Sögusafn HM · Frægir leikir · Leikmenn · Þjálfarar · Stuðningsmenn</p>
+  </footer>
+
+<script>
+const byId = id => document.getElementById(id);
+let historyData = null;
+async function loadHistory(){
+  const res = await fetch('data/history_extended.json');
+  historyData = await res.json();
+  renderAll();
+}
+function card(html, cls='historyCard'){ return `<article class="${cls}">${html}</article>`; }
+function renderMatches(){
+  byId('famousMatches').innerHTML = historyData.sections.matches.map(m => card(`
+    <div class="historyYear">${m.year}</div>
+    <h3>${m.title}</h3>
+    <p class="historyTeams">${m.teams}</p>
+    <p class="historyPlace">${m.place}</p>
+    <p>${m.summary}</p>
+    <div class="historyQuestion">${m.classroom}</div>
+  `)).join('');
+}
+function renderEvents(){
+  byId('historyEvents').innerHTML = historyData.sections.events.map(e => card(`
+    <div class="historyYear">${e.year}</div>
+    <span class="topicPill">${e.theme}</span>
+    <h3>${e.title}</h3>
+    <p>${e.summary}</p>
+  `,'timelineCard')).join('');
+}
+function renderPlayers(){
+  byId('historyPlayers').innerHTML = historyData.sections.players.map(p => card(`
+    <div class="profileTop"><span class="avatarCircle">${p.name.split(' ').map(x=>x[0]).join('').slice(0,2)}</span><div><h3>${p.name}</h3><p>${p.country} · ${p.era}</p></div></div>
+    <p class="topicPill">${p.role}</p>
+    <p>${p.summary}</p>
+    <div class="historyQuestion">${p.question}</div>
+  `,'profileCard')).join('');
+}
+function renderCoaches(){
+  byId('historyCoaches').innerHTML = historyData.sections.coaches.map(c => card(`
+    <div class="profileTop"><span class="avatarCircle coach">${c.name.split(' ').map(x=>x[0]).join('').slice(0,2)}</span><div><h3>${c.name}</h3><p>${c.country} · ${c.era}</p></div></div>
+    <p>${c.summary}</p>
+    <div class="historyQuestion">${c.task}</div>
+  `,'profileCard')).join('');
+}
+function renderSupporters(){
+  byId('historySupporters').innerHTML = historyData.sections.supporters.map(s => card(`
+    <div class="historyYear">${s.year}</div>
+    <h3>${s.title}</h3>
+    <p>${s.summary}</p>
+    <div class="historyQuestion">${s.task}</div>
+  `)).join('');
+}
+function renderAssignments(){
+  byId('historyAssignmentsList').innerHTML = historyData.sections.assignments.map((a,i) => `
+    <article class="assignmentCard"><span>${i+1}</span><p>${a}</p></article>
+  `).join('');
+}
+function randomHistory(){
+  if(!historyData) return;
+  const pool = [
+    ...historyData.sections.matches.map(x=>({...x,type:'Frægur leikur', prompt:x.classroom})),
+    ...historyData.sections.events.map(x=>({...x,type:'Atburður', prompt:'Búðu til 5 punkta tímalínu um þennan atburð.'})),
+    ...historyData.sections.players.map(x=>({...x,type:'Leikmaður', title:x.name, prompt:x.question})),
+    ...historyData.sections.coaches.map(x=>({...x,type:'Þjálfari', title:x.name, prompt:x.task})),
+    ...historyData.sections.supporters.map(x=>({...x,type:'Stuðningsmenn', prompt:x.task}))
+  ];
+  const item = pool[Math.floor(Math.random()*pool.length)];
+  byId('randomHistoryBox').innerHTML = `
+    <p class="eyebrow">${item.type} ${item.year ? '· ' + item.year : ''}</p>
+    <h3>${item.title}</h3>
+    <p>${item.summary}</p>
+    <div class="historyQuestion">${item.prompt}</div>
+  `;
+}
+function renderAll(){ renderMatches(); renderEvents(); renderPlayers(); renderCoaches(); renderSupporters(); renderAssignments(); randomHistory(); }
+byId('randomHistoryBtn').addEventListener('click', randomHistory);
+loadHistory().catch(err => { byId('randomHistoryBox').textContent = 'Ekki tókst að hlaða sögugögnum.'; console.error(err); });
+</script>
+</body>
+</html>

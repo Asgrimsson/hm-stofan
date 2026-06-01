@@ -1,0 +1,336 @@
+{
+  "updated": "2026-06-01",
+  "sections": {
+    "matches": [
+      {
+        "year": 1930,
+        "title": "Fyrsti úrslitaleikurinn",
+        "teams": "Úrúgvæ 4–2 Argentína",
+        "place": "Montevideo, Úrúgvæ",
+        "summary": "Fyrsta heimsmeistaramótið endaði með sigri heimamanna. Leikurinn mótaði hefðina um að HM væri bæði íþróttaviðburður og þjóðarhátíð.",
+        "classroom": "Hvernig getur heimavöllur haft áhrif á leikmenn og stuðningsmenn?"
+      },
+      {
+        "year": 1950,
+        "title": "Maracanazo",
+        "teams": "Úrúgvæ 2–1 Brasilía",
+        "place": "Maracanã, Rio de Janeiro",
+        "summary": "Brasilía þurfti aðeins jafntefli í lokaumferðinni en Úrúgvæ sneri leiknum við. Þetta er einn frægasti og sársaukafyllsti leikur í sögu Brasilíu.",
+        "classroom": "Af hverju verða sumir leikir hluti af þjóðarsögu?"
+      },
+      {
+        "year": 1954,
+        "title": "Kraftaverkið í Bern",
+        "teams": "Vestur-Þýskaland 3–2 Ungverjaland",
+        "place": "Bern, Sviss",
+        "summary": "Ungverjaland var talið besta lið heims og hafði unnið Þjóðverja stórt fyrr á mótinu. Í úrslitaleiknum komu Þjóðverjar til baka og unnu óvæntan sigur.",
+        "classroom": "Hvað kennir þessi leikur okkur um væntingar og hugarfar?"
+      },
+      {
+        "year": 1966,
+        "title": "England vinnur á Wembley",
+        "teams": "England 4–2 Vestur-Þýskaland",
+        "place": "London, England",
+        "summary": "Úrslitaleikurinn fór í framlengingu og Geoff Hurst skoraði þrennu. Markið sem fór í slána og niður er enn rætt í dag.",
+        "classroom": "Hvernig hefur tæknin breytt dómgæslu í fótbolta?"
+      },
+      {
+        "year": 1970,
+        "title": "Brasilía og listfótboltinn",
+        "teams": "Brasilía 4–1 Ítalía",
+        "place": "Mexíkóborg, Mexíkó",
+        "summary": "Brasilía með Pelé, Jairzinho, Tostão, Rivelino og Carlos Alberto er oft nefnt eitt besta landslið sögunnar. Lokamarkið er frægt fyrir samspil og ró.",
+        "classroom": "Hvernig getur liðsheild gert stjörnur enn betri?"
+      },
+      {
+        "year": 1986,
+        "title": "Maradona gegn Englandi",
+        "teams": "Argentína 2–1 England",
+        "place": "Mexíkóborg, Mexíkó",
+        "summary": "Maradona skoraði tvö af frægustu mörkum HM: eitt mjög umdeilt mark með hendi og síðan eitt magnaðasta einstaklingsmark sögunnar.",
+        "classroom": "Hvar liggja mörkin milli snilli, heppni og ósanngirni í íþróttum?"
+      },
+      {
+        "year": 1998,
+        "title": "Frakkland á heimavelli",
+        "teams": "Frakkland 3–0 Brasilía",
+        "place": "Saint-Denis, Frakkland",
+        "summary": "Frakkland vann sinn fyrsta heimsmeistaratitil. Zidane skoraði tvö mörk með skalla í úrslitaleiknum.",
+        "classroom": "Hvaða áhrif getur stórsigur haft á sjálfsmynd þjóðar?"
+      },
+      {
+        "year": 2002,
+        "title": "Ronaldo snýr aftur",
+        "teams": "Brasilía 2–0 Þýskaland",
+        "place": "Yokohama, Japan",
+        "summary": "Ronaldo hafði glímt við erfið meiðsli en varð markakóngur mótsins og skoraði bæði mörk Brasilíu í úrslitaleiknum.",
+        "classroom": "Hvað þarf íþróttamaður að hafa til að koma til baka eftir mótlæti?"
+      },
+      {
+        "year": 2010,
+        "title": "Spánn vinnur í fyrsta sinn",
+        "teams": "Spánn 1–0 Holland",
+        "place": "Jóhannesarborg, Suður-Afríka",
+        "summary": "Andrés Iniesta skoraði sigurmarkið í framlengingu. Spánn vann mótið með boltaöryggi, þolinmæði og frábærri liðsheild.",
+        "classroom": "Er hægt að vinna mót með því að stjórna hraðanum frekar en að ráðast alltaf hratt?"
+      },
+      {
+        "year": 2014,
+        "title": "7–1 leikurinn",
+        "teams": "Þýskaland 7–1 Brasilía",
+        "place": "Belo Horizonte, Brasilía",
+        "summary": "Þýskaland vann Brasilíu í undanúrslitum með ótrúlegum mun. Leikurinn varð tákn um hrun, skipulag og fótboltaáfall.",
+        "classroom": "Hvernig bregðast lið við þegar allt fer úrskeiðis?"
+      },
+      {
+        "year": 2018,
+        "title": "Frakkland gegn Króatíu",
+        "teams": "Frakkland 4–2 Króatía",
+        "place": "Moskva, Rússland",
+        "summary": "Króatía fór óvænt alla leið í úrslit en Frakkland vann með blöndu af hraða, krafti og reynslu.",
+        "classroom": "Hvað gerir underdog-lið hættulegt í útsláttarkeppni?"
+      },
+      {
+        "year": 2022,
+        "title": "Messi, Mbappé og dramatíkin",
+        "teams": "Argentína 3–3 Frakkland, Argentína vann í vítum",
+        "place": "Lusail, Katar",
+        "summary": "Einn dramatískasti úrslitaleikur HM. Messi leiddi Argentínu til sigurs en Mbappé skoraði þrennu og hélt Frakklandi inni í leiknum.",
+        "classroom": "Af hverju muna stuðningsmenn sérstaklega eftir dramatískum lokamínútum?"
+      }
+    ],
+    "events": [
+      {
+        "year": 1930,
+        "title": "HM hefst í Úrúgvæ",
+        "summary": "Fyrsta HM fór fram í Suður-Ameríku. Ferðalög voru löng og flókin og ekki öll bestu lið Evrópu tóku þátt.",
+        "theme": "upphaf"
+      },
+      {
+        "year": 1950,
+        "title": "HM snýr aftur eftir heimsstyrjöld",
+        "summary": "Mótið í Brasilíu varð tákn um að alþjóðleg íþróttakeppni væri aftur komin af stað eftir langt hlé.",
+        "theme": "samfélag"
+      },
+      {
+        "year": 1966,
+        "title": "Jules Rimet bikarinn týnist og finnst",
+        "summary": "Bikarinn var stolinn fyrir mótið í Englandi en fannst síðar af hundinum Pickles. Þetta varð ein undarlegasta saga HM.",
+        "theme": "atburður"
+      },
+      {
+        "year": 1970,
+        "title": "Litir, sjónvarp og ný ímynd",
+        "summary": "Mótið í Mexíkó var eitt fyrsta HM sem margir sáu í lit í sjónvarpi. Ímynd leikmanna og liða varð stærri en áður.",
+        "theme": "miðlar"
+      },
+      {
+        "year": 1970,
+        "title": "Gul og rauð spjöld verða hluti af leiknum",
+        "summary": "Spjaldakerfið gerði dómgæslu sýnilegri og auðveldari fyrir leikmenn, áhorfendur og sjónvarpsáhorfendur.",
+        "theme": "reglur"
+      },
+      {
+        "year": 1986,
+        "title": "Mexíkóska bylgjan verður heimsfræg",
+        "summary": "Áhorfendabylgjan varð eitt þekktasta stuðningsmannafyrirbæri HM og dreifðist síðan um heiminn.",
+        "theme": "stuðningsmenn"
+      },
+      {
+        "year": 1994,
+        "title": "HM í Bandaríkjunum",
+        "summary": "Mótið laðaði að sér mikinn fjölda áhorfenda og sýndi að knattspyrna gat vaxið hratt á nýjum mörkuðum.",
+        "theme": "vöxtur"
+      },
+      {
+        "year": 1998,
+        "title": "32 liða mót",
+        "summary": "HM stækkaði í 32 lið og fleiri þjóðir fengu tækifæri á stærsta sviðinu.",
+        "theme": "skipulag"
+      },
+      {
+        "year": 2010,
+        "title": "Fyrsta HM í Afríku",
+        "summary": "Suður-Afríka hélt fyrsta HM á afrískri grundu. Vuvuzelur, litir og afrísk stemning settu sterkan svip á mótið.",
+        "theme": "heimshluti"
+      },
+      {
+        "year": 2014,
+        "title": "Marklínutækni",
+        "summary": "Tæknin varð sýnilegri hluti af HM og minnkaði líkur á mistökum þegar meta þurfti hvort boltinn hefði farið yfir línuna.",
+        "theme": "tækni"
+      },
+      {
+        "year": 2018,
+        "title": "VAR á HM",
+        "summary": "Myndbandsdómgæsla varð stór hluti af umræðu um réttlæti, tafir og tilfinningar í leiknum.",
+        "theme": "tækni"
+      },
+      {
+        "year": 2026,
+        "title": "48 liða HM",
+        "summary": "HM 2026 verður stærra en áður með fleiri þjóðum, fleiri leikjum og þremur gestgjafalöndum.",
+        "theme": "framtíð"
+      }
+    ],
+    "players": [
+      {
+        "name": "Pelé",
+        "country": "Brasilía",
+        "era": "1958–1970",
+        "role": "Sóknarmaður",
+        "summary": "Pelé varð heimsmeistari þrisvar og er táknmynd brasilísks sóknarfótbolta. Hann var ungur stórstjarna 1958 og lykilmaður í frábæru liði 1970.",
+        "question": "Hvernig getur einn leikmaður haft áhrif á ímynd heillar þjóðar?"
+      },
+      {
+        "name": "Franz Beckenbauer",
+        "country": "Þýskaland",
+        "era": "1966–1974",
+        "role": "Varnarmaður / leiðtogi",
+        "summary": "Beckenbauer var glæsilegur varnarmaður og leiðtogi. Hann varð heimsmeistari sem leikmaður og síðar sem þjálfari.",
+        "question": "Hvað þýðir að stjórna leiknum aftan frá?"
+      },
+      {
+        "name": "Johan Cruyff",
+        "country": "Holland",
+        "era": "1974",
+        "role": "Sóknar- og miðjumaður",
+        "summary": "Cruyff vann ekki HM en breytti hugmyndum fólks um hreyfingu, rými og liðsheild með Hollandi 1974.",
+        "question": "Getur leikmaður verið sögulegur án þess að vinna titilinn?"
+      },
+      {
+        "name": "Diego Maradona",
+        "country": "Argentína",
+        "era": "1982–1994",
+        "role": "Sóknarmaður / leikstjórnandi",
+        "summary": "Maradona bar Argentínu oft á herðum sér, sérstaklega 1986. Hann er bæði snillingur og umdeild persóna í HM-sögunni.",
+        "question": "Af hverju eru umdeildir leikmenn stundum þeir eftirminnilegustu?"
+      },
+      {
+        "name": "Zinedine Zidane",
+        "country": "Frakkland",
+        "era": "1998–2006",
+        "role": "Miðjumaður",
+        "summary": "Zidane skoraði tvö mörk í úrslitaleiknum 1998 og var lykilmaður í gullaldarliði Frakka. Ferill hans á HM endaði dramatískt 2006.",
+        "question": "Hvernig getur ein ákvörðun breytt því hvernig fólk man eftir leikmanni?"
+      },
+      {
+        "name": "Ronaldo Nazário",
+        "country": "Brasilía",
+        "era": "1994–2006",
+        "role": "Sóknarmaður",
+        "summary": "Ronaldo var hraður, sterkur og tæknilegur markaskorari. Endurkoma hans 2002 er ein frægasta endurkomusaga HM.",
+        "question": "Hvað gerir endurkomu í íþróttum sérstaklega sterka sögu?"
+      },
+      {
+        "name": "Miroslav Klose",
+        "country": "Þýskaland",
+        "era": "2002–2014",
+        "role": "Sóknarmaður",
+        "summary": "Klose varð markahæsti leikmaður í sögu HM. Hann var þekktur fyrir rétta staðsetningu, vinnusemi og stöðugleika.",
+        "question": "Er stöðugleiki jafn mikilvægur og snilld?"
+      },
+      {
+        "name": "Lionel Messi",
+        "country": "Argentína",
+        "era": "2006–2022",
+        "role": "Sóknarmaður / leikstjórnandi",
+        "summary": "Messi vann HM 2022 eftir langa leit að stóra titlinum með Argentínu. Hann tengir saman tækni, sýn og þolinmæði.",
+        "question": "Hvernig breytir einn titill umræðu um feril leikmanns?"
+      },
+      {
+        "name": "Kylian Mbappé",
+        "country": "Frakkland",
+        "era": "2018–",
+        "role": "Sóknarmaður",
+        "summary": "Mbappé varð heimsmeistari ungur og skoraði þrennu í úrslitaleik 2022. Hann táknar hraða, nútímafótbolta og næstu kynslóð.",
+        "question": "Hvað gerir leikmann að stjörnu á heimsvísu?"
+      }
+    ],
+    "coaches": [
+      {
+        "name": "Vittorio Pozzo",
+        "country": "Ítalía",
+        "era": "1934 og 1938",
+        "summary": "Pozzo er eini þjálfarinn sem hefur stýrt liði til tveggja HM-titla. Ítalía vann undir hans stjórn 1934 og 1938.",
+        "task": "Ræddu: Hvað gerir þjálfara farsælan yfir mörg ár?"
+      },
+      {
+        "name": "Mário Zagallo",
+        "country": "Brasilía",
+        "era": "1958–1998",
+        "summary": "Zagallo varð heimsmeistari sem leikmaður og síðar sem þjálfari. Hann tengir saman margar gullaldir Brasilíu.",
+        "task": "Búðu til tímalínu yfir feril Zagallo."
+      },
+      {
+        "name": "Franz Beckenbauer",
+        "country": "Þýskaland",
+        "era": "1974 og 1990",
+        "summary": "Beckenbauer vann HM sem leikmaður og síðar sem þjálfari. Hann er dæmi um leiðtoga sem færði leikskilning yfir á þjálfun.",
+        "task": "Hvað er líkt og ólíkt með því að leiða sem leikmaður og þjálfari?"
+      },
+      {
+        "name": "Luiz Felipe Scolari",
+        "country": "Brasilía",
+        "era": "2002",
+        "summary": "Scolari stýrði Brasilíu til heimsmeistaratitils 2002 með sterka liðsheild og skýrt hlutverkakerfi.",
+        "task": "Veldu þrjú hlutverk í liði og útskýrðu af hverju þau skipta máli."
+      },
+      {
+        "name": "Vicente del Bosque",
+        "country": "Spánn",
+        "era": "2010",
+        "summary": "Del Bosque stýrði Spáni 2010 þegar liðið vann með yfirvegun, boltaöryggi og sterku miðjusvæði.",
+        "task": "Ræddu: Getur rólegt lið verið jafn hættulegt og sprengikraftsmikið lið?"
+      },
+      {
+        "name": "Didier Deschamps",
+        "country": "Frakkland",
+        "era": "1998 og 2018",
+        "summary": "Deschamps varð heimsmeistari sem fyrirliði 1998 og þjálfari 2018. Hann er dæmi um sigurmenningu og skipulag.",
+        "task": "Hvernig getur reynsla úr leikmannahlutverki nýst í þjálfun?"
+      },
+      {
+        "name": "Lionel Scaloni",
+        "country": "Argentína",
+        "era": "2022",
+        "summary": "Scaloni byggði lið sem sameinaði Messi, vinnusemi, samstöðu og taktíska sveigjanleika.",
+        "task": "Hvaða þættir búa til samstöðu í liði?"
+      }
+    ],
+    "supporters": [
+      {
+        "title": "Maracanã og þjóðarsorgin",
+        "year": 1950,
+        "summary": "Áhorfendur í Brasilíu upplifðu tapið gegn Úrúgvæ sem miklu meira en íþróttatap. Stuðningsmenn gera leiki að minningum sem lifa lengur en tölurnar.",
+        "task": "Skrifaðu dagbókarfærslu stuðningsmanns eftir stórt tap."
+      },
+      {
+        "title": "Mexíkóska bylgjan",
+        "year": 1986,
+        "summary": "La ola varð sýnileg táknmynd stuðningsmanna og sýndi hvernig áhorfendur geta sjálfir orðið hluti af sýningunni.",
+        "task": "Hannaðu stuðningsmannasið fyrir bekkinn."
+      },
+      {
+        "title": "Vuvuzelur í Suður-Afríku",
+        "year": 2010,
+        "summary": "Hljóðheimur mótsins var ólíkur öllu öðru. Sumum fannst stemningin frábær, öðrum fannst hljóðið yfirþyrmandi.",
+        "task": "Ræddu: Hvenær verður stemning of mikil?"
+      },
+      {
+        "title": "Tifo, söngvar og litir",
+        "year": 2026,
+        "summary": "Stuðningsmenn nota fána, liti, búninga, söngva og risamyndir til að sýna hverjir þeir eru og hvaða sögu þeir vilja segja.",
+        "task": "Búðu til stuðningsplakat fyrir þjóð sem þú valdir."
+      }
+    ],
+    "assignments": [
+      "Veldu einn frægan leik og skrifaðu frétt eins og þú sért á vellinum.",
+      "Veldu einn leikmann og búðu til stutta kynningu: hæfileikar, mótlæti og arfleifð.",
+      "Berðu saman tvo þjálfara: hvernig stjórnuðu þeir liðum sínum?",
+      "Búðu til tímalínu með 8 mikilvægustu atburðum HM að þínu mati.",
+      "Skrifaðu viðtal við stuðningsmann eftir sigur eða tap.",
+      "Ræddu í hóp: Hvað gerir fótboltaleik sögulegan?"
+    ]
+  }
+}
