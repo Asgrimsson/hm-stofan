@@ -112,3 +112,133 @@ main{margin:0 auto 0;}
 .dailyTaskItems b { display:block; margin-bottom:4px; }
 .fullBtn { width:100%; justify-content:center; text-align:center; }
 @media (max-width: 920px){ .dashboardGrid { grid-template-columns:1fr; } .teacherFactGrid { grid-template-columns:1fr; } .dashboardActions { align-items: stretch; } .dashboardActions > * { flex: 1 1 220px; } }
+
+/* v0.7 HM Leikjasalur */
+.gameHero {
+  background: radial-gradient(circle at 20% 10%, rgba(255,255,255,.25), transparent 25%), linear-gradient(135deg, #0f6f4f, #0d3b66 55%, #721817);
+}
+.gameHallPreview {
+  border: 2px solid rgba(15, 111, 79, .18);
+}
+.gameModeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 1rem;
+}
+.gameMode {
+  border: 1px solid rgba(15, 111, 79, .18);
+  background: rgba(255,255,255,.92);
+  border-radius: 22px;
+  padding: 1rem;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(16,24,40,.08);
+  display: grid;
+  gap: .35rem;
+  transition: transform .15s ease, border .15s ease, box-shadow .15s ease;
+}
+.gameMode:hover, .gameMode.active {
+  transform: translateY(-2px);
+  border-color: rgba(15, 111, 79, .65);
+  box-shadow: 0 18px 35px rgba(16,24,40,.14);
+}
+.gameMode span { font-size: 2rem; }
+.gameMode strong { font-size: 1.05rem; }
+.gameMode small { color: var(--muted); line-height: 1.3; }
+.playPanel {
+  background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(244,250,247,.96));
+}
+.gameTopLine {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) repeat(3, minmax(86px, auto));
+  gap: 1rem;
+  align-items: center;
+}
+.gameScoreBox {
+  background: #fff;
+  border: 1px solid rgba(15, 111, 79, .14);
+  border-radius: 18px;
+  padding: .75rem 1rem;
+  text-align: center;
+  box-shadow: 0 8px 18px rgba(16,24,40,.06);
+}
+.gameScoreBox span { display: block; color: var(--muted); font-size: .8rem; }
+.gameScoreBox strong { font-size: 1.65rem; }
+.visualQuestion {
+  min-height: 145px;
+  display: grid;
+  place-items: center;
+  margin: 1.25rem 0;
+  background: rgba(255,255,255,.7);
+  border-radius: 26px;
+  border: 1px dashed rgba(15, 111, 79, .22);
+  padding: 1rem;
+}
+.bigFlag {
+  width: min(360px, 85vw);
+  max-height: 210px;
+  object-fit: contain;
+  border-radius: 18px;
+  box-shadow: 0 16px 40px rgba(0,0,0,.18);
+  background: white;
+}
+.smallFlag {
+  width: 120px;
+  max-height: 82px;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 10px 26px rgba(0,0,0,.12);
+  background: white;
+  margin-top: .65rem;
+}
+.questionBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: .85rem 1.1rem;
+  border-radius: 999px;
+  background: #0f6f4f;
+  color: #fff;
+  font-size: clamp(1.3rem, 3vw, 2.2rem);
+  font-weight: 900;
+  box-shadow: 0 14px 34px rgba(15,111,79,.22);
+}
+.questionBadge.trophy { background: #b7791f; }
+.answerGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(160px, 1fr));
+  gap: .8rem;
+}
+.answerBtn {
+  border: 1px solid rgba(13,59,102,.16);
+  background: #fff;
+  border-radius: 18px;
+  padding: 1rem;
+  font-weight: 800;
+  font-size: 1.02rem;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(16,24,40,.07);
+}
+.answerBtn:hover:not(:disabled) { transform: translateY(-1px); }
+.answerBtn.correct { background: #dcfce7; border-color: #22c55e; }
+.answerBtn.wrong { background: #fee2e2; border-color: #ef4444; }
+.answerBtn:disabled { cursor: default; opacity: .9; }
+.feedbackBox {
+  margin: 1rem 0;
+  background: rgba(13,59,102,.07);
+  border-radius: 18px;
+  padding: 1rem;
+  font-weight: 700;
+}
+.centerButtons { justify-content: center; }
+.hidden { display: none !important; }
+.gameTeacherPanel article { min-height: 150px; }
+@media (max-width: 760px){
+  .gameTopLine { grid-template-columns: 1fr 1fr; }
+  .gameTopLine > div:first-child { grid-column: 1 / -1; }
+  .answerGrid { grid-template-columns: 1fr; }
+}
+@media print {
+  .gameModeGrid, .buttonRow, .topbar, footer, .playPanel { display: none !important; }
+  .panel { box-shadow: none !important; border: 1px solid #ddd; }
+}

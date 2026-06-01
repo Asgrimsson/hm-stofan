@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HM Leikjasalur · HM-stofan 2026</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="gameHallBody">
+  <header class="subHero gameHero">
+    <nav class="topbar">
+      <div class="brand"><span class="ball">⚽</span><span>HM Leikjasalur</span></div>
+      <div class="navlinks">
+        <a href="index.html">Forsíða</a>
+        <a href="verkefni.html">Verkefni</a>
+        <a href="kennarabord.html">Kennaraborð</a>
+        <a href="skjar.html">Live skjár</a>
+      </div>
+    </nav>
+    <section class="heroContent compactHero">
+      <p class="eyebrow">v0.7 · Leikjavæðing</p>
+      <h1>Leikir, áskoranir og hraðaspurningar um HM</h1>
+      <p class="lead">Æfðu fána, höfuðborgir, riðla og HM-sögu. Leikjasalurinn vistar stig í þessum vafra og hentar vel í upphafi eða lok kennslustundar.</p>
+      <div class="heroStats gameStats">
+        <div><strong id="totalScoreHero">0</strong><span>heildarstig</span></div>
+        <div><strong id="bestStreakHero">0</strong><span>besta runa</span></div>
+        <div><strong id="gamesPlayedHero">0</strong><span>spurningar</span></div>
+        <div><strong id="badgeHero">⭐</strong><span>merki</span></div>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="panel gameIntroPanel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Veldu leik</p>
+          <h2>HM Leikjasalur</h2>
+        </div>
+        <div class="buttonRow">
+          <button id="resetGameStats" class="dangerBtn" type="button">Hreinsa stig</button>
+          <button id="printGameSheet" class="ghostBtn" type="button">Prenta æfingablað</button>
+        </div>
+      </div>
+      <div class="gameModeGrid">
+        <button class="gameMode active" data-game="flags"><span>🏳️</span><strong>Fánaleikur</strong><small>Hvaða þjóð á fánann?</small></button>
+        <button class="gameMode" data-game="capitals"><span>🏙️</span><strong>Höfuðborgir</strong><small>Hvaða höfuðborg passar?</small></button>
+        <button class="gameMode" data-game="groups"><span>📊</span><strong>Riðlaleikur</strong><small>Í hvaða riðli er þjóðin?</small></button>
+        <button class="gameMode" data-game="champions"><span>🏆</span><strong>HM-sagan</strong><small>Hver varð meistari?</small></button>
+        <button class="gameMode" data-game="speed"><span>⏱️</span><strong>60 sek. áskorun</strong><small>Blandaðar hraðaspurningar</small></button>
+      </div>
+    </section>
+
+    <section class="panel playPanel">
+      <div class="gameTopLine">
+        <div>
+          <p id="gameLabel" class="eyebrow">Fánaleikur</p>
+          <h2 id="questionTitle">Hleð leik...</h2>
+        </div>
+        <div class="gameScoreBox">
+          <span>Stig</span><strong id="currentScore">0</strong>
+        </div>
+        <div class="gameScoreBox">
+          <span>Runa</span><strong id="currentStreak">0</strong>
+        </div>
+        <div class="gameScoreBox timerBox">
+          <span>Tími</span><strong id="timerDisplay">—</strong>
+        </div>
+      </div>
+
+      <div id="visualQuestion" class="visualQuestion"></div>
+      <div id="answerGrid" class="answerGrid"></div>
+      <div id="feedback" class="feedbackBox">Veldu svar til að byrja.</div>
+      <div class="buttonRow centerButtons">
+        <button id="nextQuestion" class="primaryBtn" type="button">Næsta spurning</button>
+        <button id="startSpeed" class="ghostBtn hidden" type="button">Byrja 60 sekúndna áskorun</button>
+      </div>
+    </section>
+
+    <section class="panel gameTeacherPanel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Kennsluhugmyndir</p>
+          <h2>Hvernig má nota leikjasalinn?</h2>
+        </div>
+      </div>
+      <div class="teacherGrid">
+        <article><h3>Upphitun</h3><p>Byrjaðu tíma á 5 spurningum í Fánaleik eða Höfuðborgum. Nemendur svara saman á skjá.</p></article>
+        <article><h3>Paravinna</h3><p>Nemendur vinna tveir saman, skrá stig og útskýra hvert svar: „Af hverju heldurðu þetta?“</p></article>
+        <article><h3>Lokaspurning</h3><p>Notaðu 60 sekúndna áskorun sem útgöngumiða. Hver nemandi skrifar eitt nýtt atriði sem hann lærði.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>HM-stofan v0.7 · HM Leikjasalur · Fánar · Höfuðborgir · Riðlar · HM-saga · Hraðaspurningar</p>
+  </footer>
+
+  <script>
+    const STORAGE_KEY = 'hmstofa_gamehall_v07';
+    const state = { teams: [], history: [], game: 'flags', question: null, locked: false, score: 0, streak: 0, timer: null, timeLeft: null, speedActive: false };
+    const $ = (id) => document.getElementById(id);
+
+    function sample(arr, count){
+      const copy = [...arr].sort(() => Math.random() - 0.5);
+      return copy.slice(0, count);
+    }
+    function shuffle(arr){ return [...arr].sort(() => Math.random() - 0.5); }
+    function normalizeCapital(value){ return String(value || '').split(',')[0].trim(); }
+
+    function loadStats(){
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { totalScore:0, bestStreak:0, played:0 }; }
+      catch { return { totalScore:0, bestStreak:0, played:0 }; }
+    }
+    function saveStats(deltaScore=0, streak=0, playedAdd=0){
+      const stats = loadStats();
+      stats.totalScore += deltaScore;
+      stats.bestStreak = Math.max(stats.bestStreak || 0, streak || 0);
+      stats.played += playedAdd;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
+      renderStats();
+    }
+    function renderStats(){
+      const stats = loadStats();
+      $('totalScoreHero').textContent = stats.totalScore || 0;
+      $('bestStreakHero').textContent = stats.bestStreak || 0;
+      $('gamesPlayedHero').textContent = stats.played || 0;
+      $('badgeHero').textContent = stats.totalScore >= 100 ? '🏆' : stats.totalScore >= 50 ? '🥇' : stats.totalScore >= 20 ? '⭐' : '⚽';
+      $('currentScore').textContent = state.score;
+      $('currentStreak').textContent = state.streak;
+    }
+
+    async function loadData(){
+      const [teams, history] = await Promise.all([
+        fetch('data/teams.json').then(r=>r.json()),
+        fetch('data/history.json').then(r=>r.json())
+      ]);
+      state.teams = teams;
+      state.history = history;
+      renderStats();
+      newQuestion();
+    }
+
+    function setGame(game){
+      state.game = game;
+      state.score = 0;
+      state.streak = 0;
+      stopTimer();
+      state.speedActive = false;
+      $('timerDisplay').textContent = game === 'speed' ? '60' : '—';
+      $('startSpeed').classList.toggle('hidden', game !== 'speed');
+      document.querySelectorAll('.gameMode').forEach(btn => btn.classList.toggle('active', btn.dataset.game === game));
+      newQuestion();
+      renderStats();
+    }
+
+    function makeFlagQuestion(){
+      const correct = sample(state.teams,1)[0];
+      const options = shuffle([correct, ...sample(state.teams.filter(t=>t.id!==correct.id),3)]);
+      return { label:'Fánaleikur', title:'Hvaða þjóð á þennan fána?', visual:`<img class="bigFlag" src="${correct.flag}" alt="Fáni">`, answer: correct.name, options: options.map(t=>t.name), explain:`Þetta er fáni ${correct.name}.` };
+    }
+    function makeCapitalQuestion(){
+      const pool = state.teams.filter(t=>t.capital);
+      const correct = sample(pool,1)[0];
+      const options = shuffle([normalizeCapital(correct.capital), ...sample(pool.filter(t=>t.id!==correct.id),3).map(t=>normalizeCapital(t.capital))]);
+      return { label:'Höfuðborgarleikur', title:`Hver er höfuðborg ${correct.name}?`, visual:`<div class="questionBadge">${correct.name}</div><img class="smallFlag" src="${correct.flag}" alt="">`, answer: normalizeCapital(correct.capital), options, explain:`Höfuðborg ${correct.name} er ${normalizeCapital(correct.capital)}.` };
+    }
+    function makeGroupQuestion(){
+      const correct = sample(state.teams,1)[0];
+      const groups = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+      const options = shuffle([correct.group, ...sample(groups.filter(g=>g!==correct.group),3)]).map(g=>'Riðill '+g);
+      return { label:'Riðlaleikur', title:`Í hvaða riðli er ${correct.name}?`, visual:`<div class="questionBadge">${correct.name}</div><img class="smallFlag" src="${correct.flag}" alt="">`, answer:'Riðill '+correct.group, options, explain:`${correct.name} er í riðli ${correct.group}.` };
+    }
+    function makeChampionQuestion(){
+      const item = sample(state.history,1)[0];
+      const winners = [...new Set(state.history.map(h=>h.winner))];
+      const options = shuffle([item.winner, ...sample(winners.filter(w=>w!==item.winner),3)]);
+      return { label:'HM-sagan', title:`Hvaða þjóð varð heimsmeistari árið ${item.year}?`, visual:`<div class="questionBadge trophy">🏆 ${item.host} ${item.year}</div><p class="hint">Úrslitaleikur: ${item.score}</p>`, answer:item.winner, options, explain:`Árið ${item.year} varð ${item.winner} heimsmeistari. Úrslit: ${item.score}.` };
+    }
+    function makeSpeedQuestion(){
+      const makers = [makeFlagQuestion, makeCapitalQuestion, makeGroupQuestion, makeChampionQuestion];
+      const q = makers[Math.floor(Math.random()*makers.length)]();
+      q.label = '60 sekúndna áskorun';
+      return q;
+    }
+
+    function buildQuestion(){
+      if(state.game === 'flags') return makeFlagQuestion();
+      if(state.game === 'capitals') return makeCapitalQuestion();
+      if(state.game === 'groups') return makeGroupQuestion();
+      if(state.game === 'champions') return makeChampionQuestion();
+      return makeSpeedQuestion();
+    }
+
+    function newQuestion(){
+      state.locked = false;
+      state.question = buildQuestion();
+      $('gameLabel').textContent = state.question.label;
+      $('questionTitle').textContent = state.question.title;
+      $('visualQuestion').innerHTML = state.question.visual || '';
+      $('feedback').textContent = state.game === 'speed' && !state.speedActive ? 'Smelltu á „Byrja 60 sekúndna áskorun“ til að hefja leik.' : 'Veldu svar.';
+      const disabled = state.game === 'speed' && !state.speedActive;
+      $('answerGrid').innerHTML = state.question.options.map(opt => `<button class="answerBtn" type="button" ${disabled ? 'disabled' : ''}>${opt}</button>`).join('');
+      document.querySelectorAll('.answerBtn').forEach(btn => btn.addEventListener('click', () => chooseAnswer(btn.textContent, btn)));
+      renderStats();
+    }
+
+    function chooseAnswer(answer, btn){
+      if(state.locked) return;
+      if(state.game === 'speed' && !state.speedActive) return;
+      state.locked = true;
+      const correct = answer === state.question.answer;
+      document.querySelectorAll('.answerBtn').forEach(b => {
+        b.disabled = true;
+        if(b.textContent === state.question.answer) b.classList.add('correct');
+      });
+      if(correct){
+        btn.classList.add('correct');
+        state.score += 10;
+        state.streak += 1;
+        $('feedback').innerHTML = `✅ Rétt! +10 stig. ${state.question.explain}`;
+        saveStats(10, state.streak, 1);
+      } else {
+        btn.classList.add('wrong');
+        state.streak = 0;
+        $('feedback').innerHTML = `❌ Ekki alveg. Rétt svar er <strong>${state.question.answer}</strong>. ${state.question.explain}`;
+        saveStats(0, 0, 1);
+      }
+      renderStats();
+      if(state.game === 'speed' && state.speedActive){
+        setTimeout(newQuestion, 700);
+      }
+    }
+
+    function startSpeed(){
+      state.score = 0;
+      state.streak = 0;
+      state.speedActive = true;
+      state.timeLeft = 60;
+      $('timerDisplay').textContent = state.timeLeft;
+      $('startSpeed').classList.add('hidden');
+      newQuestion();
+      stopTimer();
+      state.timer = setInterval(() => {
+        state.timeLeft -= 1;
+        $('timerDisplay').textContent = state.timeLeft;
+        if(state.timeLeft <= 0){
+          stopTimer();
+          state.speedActive = false;
+          state.locked = true;
+          document.querySelectorAll('.answerBtn').forEach(b=>b.disabled=true);
+          $('feedback').innerHTML = `⏱️ Tíminn er búinn! Þú fékkst <strong>${state.score}</strong> stig í þessari umferð.`;
+          $('startSpeed').classList.remove('hidden');
+          $('startSpeed').textContent = 'Byrja aftur';
+        }
+      }, 1000);
+    }
+    function stopTimer(){ if(state.timer){ clearInterval(state.timer); state.timer=null; } }
+
+    document.querySelectorAll('.gameMode').forEach(btn => btn.addEventListener('click', () => setGame(btn.dataset.game)));
+    $('nextQuestion').addEventListener('click', () => { if(state.game !== 'speed' || state.speedActive) newQuestion(); });
+    $('startSpeed').addEventListener('click', startSpeed);
+    $('resetGameStats').addEventListener('click', () => { if(confirm('Viltu hreinsa stig leikjasalarins í þessum vafra?')){ localStorage.removeItem(STORAGE_KEY); state.score=0; state.streak=0; renderStats(); } });
+    $('printGameSheet').addEventListener('click', () => window.print());
+    loadData().catch(err => { $('feedback').textContent = 'Villa við að hlaða leikjagögnum. Athugaðu data/teams.json og data/history.json.'; console.error(err); });
+  </script>
+</body>
+</html>

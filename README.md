@@ -110,3 +110,32 @@ Opna:
 ```text
 http://localhost:8000/kennarabord.html
 ```
+
+
+## v0.7 — HM Leikjasalur
+
+Ný síða: `leikjasalur.html`
+
+Leikir:
+- Fánaleikur
+- Höfuðborgarleikur
+- Riðlaleikur
+- HM-sagan
+- 60 sekúndna áskorun
+
+Leikjasalurinn notar `data/teams.json` og `data/history.json` og vistar stig í `localStorage` í vafranum.
+
+### Uppfærsla með CMD
+
+Þegar ZIP hefur verið afþjappað beint í `C:\hm-stofan-v01`:
+
+```cmd
+cd C:\hm-stofan-v01
+git status
+git add index.html leikjasalur.html styles.css README.md
+git commit -m "Add v0.7 HM leikjasalur"
+git pull --rebase origin main
+git push
+```
+
+Ekki bæta `data/live/*.json` við venjuleg commit. GitHub Actions sér um þær skrár.
