@@ -36,7 +36,7 @@ async function loadData(){
       matches = snapshot.matches;
       history = snapshot.history;
       apiStatus = snapshot.status || {source:'github-actions-json'};
-      buildFilters(); renderTeams(); renderGroups(); renderMatches(); renderHistory(); renderApiBadge();
+      buildFilters(); renderTeams(); renderGroups(); renderMatches(); renderPredictions(); renderHistory(); renderApiBadge();
       return;
     }
   }catch(err){
@@ -54,7 +54,7 @@ async function loadData(){
   teams = Array.isArray(t) ? t : t.teams;
   matches = Array.isArray(m) ? m : m.matches;
   history = Array.isArray(h) ? h : h.history;
-  buildFilters(); renderTeams(); renderGroups(); renderMatches(); renderHistory(); renderApiBadge();
+  buildFilters(); renderTeams(); renderGroups(); renderMatches(); renderPredictions(); renderHistory(); renderApiBadge();
 }
 function renderApiBadge(){
   const hero = document.querySelector('.heroStats');
@@ -126,6 +126,160 @@ function renderMatches(){
     return `<article class="match"><div class="matchTop"><span>${fmtDate(m.date)}</span><span>Riðill ${m.group}</span></div><div class="matchTeams"><span><img class="tinyFlag" src="${h.flag}">${h.name}</span><b class="score">${score}</b><span><img class="tinyFlag" src="${a.flag}">${a.name}</span></div><div class="venue">${m.venue || ''}</div></article>`
   }).join('');
 }
+
+
+// -----------------------------
+// HM-stofan v0.3: Spáleikur bekkjarins
+// -----------------------------
+const PRED_KEY = 'hm_stofan_v03_predictions';
+const PLAYER_KEY = 'hm_stofan_v03_active_player';
+
+function loadPredStore(){
+  try { return JSON.parse(localStorage.getItem(PRED_KEY)) || {players:{}}; }
+  catch(e){ return {players:{}}; }
+}
+function savePredStore(store){ localStorage.setItem(PRED_KEY, JSON.stringify(store)); }
+function getActivePlayer(){
+  try { return JSON.parse(localStorage.getItem(PLAYER_KEY)); }
+  catch(e){ return null; }
+}
+function setActivePlayer(player){ localStorage.setItem(PLAYER_KEY, JSON.stringify(player)); }
+function matchId(m, idx){ return m.id || `${m.group}-${m.home}-${m.away}-${m.date || idx}`; }
+function isFinished(m){ return m.homeScore !== null && m.awayScore !== null && m.homeScore !== undefined && m.awayScore !== undefined; }
+function resultSign(a,b){ return a>b ? 'H' : a<b ? 'A' : 'D'; }
+function calcPredictionScore(pred, m){
+  if(!pred || !isFinished(m)) return 0;
+  const ph = Number(pred.homeScore), pa = Number(pred.awayScore);
+  if(Number.isNaN(ph) || Number.isNaN(pa)) return 0;
+  if(ph === Number(m.homeScore) && pa === Number(m.awayScore)) return 3;
+  return resultSign(ph,pa) === resultSign(Number(m.homeScore), Number(m.awayScore)) ? 1 : 0;
+}
+function playerTotals(player){
+  const preds = player.predictions || {};
+  let points = 0, exact = 0, outcome = 0, waiting = 0, totalPreds = Object.keys(preds).length;
+  matches.forEach((m, idx)=>{
+    const pred = preds[matchId(m, idx)];
+    if(!pred) return;
+    if(!isFinished(m)){ waiting++; return; }
+    const score = calcPredictionScore(pred, m);
+    points += score;
+    if(score === 3) exact++;
+    if(score === 1) outcome++;
+  });
+  return {points, exact, outcome, waiting, totalPreds};
+}
+function renderActivePlayer(){
+  const el = $('activePlayer');
+  if(!el) return;
+  const active = getActivePlayer();
+  el.textContent = active ? `Virkur þátttakandi: ${active.name} · ${active.className || 'án hóps'}` : 'Enginn þátttakandi valinn.';
+}
+function renderPredictions(){
+  const wrap = $('predictionMatches');
+  if(!wrap) return;
+  renderActivePlayer();
+  renderLeaderboard();
+  const active = getActivePlayer();
+  const store = loadPredStore();
+  const player = active ? store.players[active.id] : null;
+  const ordered = matches.slice().sort((a,b)=>String(a.date||'').localeCompare(String(b.date||'')));
+  wrap.innerHTML = ordered.map((m, idx)=>{
+    const realIdx = matches.indexOf(m);
+    const id = matchId(m, realIdx);
+    const h = team(m.home), a = team(m.away);
+    const pred = player?.predictions?.[id] || {};
+    const finished = isFinished(m);
+    const score = finished ? calcPredictionScore(pred, m) : null;
+    const disabled = active ? '' : 'disabled';
+    const resultText = finished ? `${m.homeScore} – ${m.awayScore}` : 'bíður úrslita';
+    return `<article class="predictionCard ${finished ? 'finished' : ''}">
+      <div class="matchTop"><span>${fmtDate(m.date)}</span><span>Riðill ${m.group}</span></div>
+      <div class="predictTeams">
+        <span><img class="tinyFlag" src="${h.flag}">${h.name}</span>
+        <div class="scoreInputs">
+          <input ${disabled} min="0" max="20" inputmode="numeric" type="number" value="${pred.homeScore ?? ''}" data-mid="${id}" data-side="home" aria-label="Spá fyrir ${h.name}">
+          <b>–</b>
+          <input ${disabled} min="0" max="20" inputmode="numeric" type="number" value="${pred.awayScore ?? ''}" data-mid="${id}" data-side="away" aria-label="Spá fyrir ${a.name}">
+        </div>
+        <span><img class="tinyFlag" src="${a.flag}">${a.name}</span>
+      </div>
+      <div class="predictionMeta">
+        <span>Úrslit: <strong>${resultText}</strong></span>
+        <span>${finished ? `Stig: <strong>${score}</strong>` : 'Stig reiknast þegar úrslit liggja fyrir'}</span>
+      </div>
+    </article>`;
+  }).join('');
+  wrap.querySelectorAll('input[data-mid]').forEach(input=>input.addEventListener('change', savePredictionFromInput));
+}
+function savePredictionFromInput(e){
+  const active = getActivePlayer();
+  if(!active){ alert('Skráðu fyrst nafn þátttakanda.'); return; }
+  const store = loadPredStore();
+  const player = store.players[active.id];
+  if(!player) return;
+  const mid = e.target.dataset.mid;
+  player.predictions[mid] = player.predictions[mid] || {};
+  const card = e.target.closest('.predictionCard');
+  const home = card.querySelector('input[data-side="home"]').value;
+  const away = card.querySelector('input[data-side="away"]').value;
+  if(home === '' || away === ''){
+    player.predictions[mid] = {homeScore: home, awayScore: away, updatedAt:new Date().toISOString()};
+  } else {
+    player.predictions[mid] = {homeScore:Number(home), awayScore:Number(away), updatedAt:new Date().toISOString()};
+  }
+  savePredStore(store);
+  renderLeaderboard();
+}
+function renderLeaderboard(){
+  const board = $('leaderboard');
+  if(!board) return;
+  const store = loadPredStore();
+  const rows = Object.values(store.players || {}).map(p=>({...p, totals:playerTotals(p)}))
+    .sort((a,b)=>b.totals.points-a.totals.points || b.totals.exact-a.totals.exact || a.name.localeCompare(b.name,'is'));
+  if(!rows.length){ board.innerHTML = '<p class="smallNote">Engar spár komnar ennþá.</p>'; return; }
+  board.innerHTML = rows.map((p,i)=>`
+    <div class="leaderRow ${i<3 ? 'podium' : ''}">
+      <strong>${i===0?'🏆':i===1?'🥈':i===2?'🥉':i+1}</strong>
+      <div><b>${p.name}</b><small>${p.className || 'án hóps'} · ${p.totals.totalPreds} spár · ${p.totals.exact} nákvæmar</small></div>
+      <span>${p.totals.points} stig</span>
+    </div>`).join('');
+}
+function setupPredictionEvents(){
+  const saveBtn = $('savePlayerBtn');
+  if(!saveBtn) return;
+  saveBtn.addEventListener('click', ()=>{
+    const name = $('predName').value.trim();
+    const className = $('predClass').value.trim();
+    if(!name){ alert('Skráðu nafn fyrst.'); return; }
+    const id = `${name}-${className}`.toLowerCase().replace(/[^a-z0-9áðéíóúýþæö-]+/gi,'-');
+    const store = loadPredStore();
+    store.players[id] = store.players[id] || {id, name, className, predictions:{}, createdAt:new Date().toISOString()};
+    store.players[id].name = name;
+    store.players[id].className = className;
+    savePredStore(store);
+    setActivePlayer({id, name, className});
+    renderPredictions();
+  });
+  $('exportPredictionsBtn')?.addEventListener('click', ()=>{
+    const blob = new Blob([JSON.stringify(loadPredStore(), null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `hm-stofan-spaleikur-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  $('resetPredictionsBtn')?.addEventListener('click', ()=>{
+    if(confirm('Viltu örugglega hreinsa allan spáleik í þessum vafra?')){
+      localStorage.removeItem(PRED_KEY);
+      localStorage.removeItem(PLAYER_KEY);
+      $('predName').value = '';
+      $('predClass').value = '';
+      renderPredictions();
+    }
+  });
+}
+setupPredictionEvents();
+
 function renderHistory(){
   const counts = history.reduce((acc,x)=>{acc[x.winner]=(acc[x.winner]||0)+1; return acc;},{});
   $('winnerStats').innerHTML = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<span class="winnerChip">${k}: ${v}</span>`).join('');
