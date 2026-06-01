@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HM-stofan 2026 · Live skjár</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="screenMode">
+  <header class="screenHeader">
+    <div class="brand"><span class="ball">⚽</span><span>HM-stofan 2026 · Live skjár</span></div>
+    <a class="ghostBtn linkBtn" href="index.html">Til baka á vefinn</a>
+  </header>
+
+  <main class="screenMain">
+    <section id="live" class="panel livePanel screenPanel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Kennslustofuskjár</p>
+          <h2>Leikir dagsins, næsti leikur og verkefni dagsins</h2>
+        </div>
+        <button id="refreshLiveBtn" class="ghostBtn" type="button">Endurreikna skjá</button>
+      </div>
+
+      <div class="liveGrid">
+        <article class="liveHeroCard" id="nextMatchCard">
+          <p class="eyebrow">Næsti leikur</p>
+          <div id="nextMatchContent" class="nextMatchContent">Hleð næsta leik...</div>
+        </article>
+
+        <article class="liveCard" id="countryOfDayCard">
+          <p class="eyebrow">Þjóð dagsins</p>
+          <div id="countryOfDay" class="countryOfDay">Hleð þjóð dagsins...</div>
+        </article>
+
+        <article class="liveCard questionCard">
+          <p class="eyebrow">Spurning dagsins</p>
+          <div id="questionOfDay">Hleð spurningu...</div>
+        </article>
+      </div>
+
+      <div class="liveGrid second">
+        <article class="liveCard wide">
+          <div class="cardTitleRow"><h3>Leikir dagsins</h3><span id="todayDateLabel" class="pill">í dag</span></div>
+          <div id="todayMatches" class="todayMatches"></div>
+        </article>
+        <article class="liveCard">
+          <h3>HM-púls</h3>
+          <div id="worldCupPulse" class="pulseGrid"></div>
+        </article>
+        <article class="liveCard">
+          <h3>Topplisti spáleiks</h3>
+          <div id="liveLeaderboard" class="leaderboard compact"></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- Falin svæði sem app.js notar líka á forsíðunni -->
+  <div style="display:none">
+    <input id="search"><select id="groupFilter"></select><select id="continentFilter"></select>
+    <div id="teamGrid"></div><div id="groupsWrap"></div><div id="matchList"></div>
+    <div id="predictionMatches"></div><div id="leaderboard"></div><p id="activePlayer"></p>
+    <input id="predName"><input id="predClass"><button id="savePlayerBtn"></button>
+    <button id="exportPredictionsBtn"></button><button id="resetPredictionsBtn"></button>
+    <div id="winnerStats"></div><div id="historyTimeline"></div>
+    <dialog id="teamModal"><button id="closeModal"></button><div id="modalContent"></div></dialog>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

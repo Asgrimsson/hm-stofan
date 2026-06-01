@@ -36,7 +36,7 @@ async function loadData(){
       matches = snapshot.matches;
       history = snapshot.history;
       apiStatus = snapshot.status || {source:'github-actions-json'};
-      buildFilters(); renderTeams(); renderGroups(); renderMatches(); renderPredictions(); renderHistory(); renderApiBadge();
+      buildFilters(); renderTeams(); renderGroups(); renderMatches(); renderPredictions(); renderLiveDashboard(); renderHistory(); renderApiBadge();
       return;
     }
   }catch(err){
@@ -54,7 +54,7 @@ async function loadData(){
   teams = Array.isArray(t) ? t : t.teams;
   matches = Array.isArray(m) ? m : m.matches;
   history = Array.isArray(h) ? h : h.history;
-  buildFilters(); renderTeams(); renderGroups(); renderMatches(); renderPredictions(); renderHistory(); renderApiBadge();
+  buildFilters(); renderTeams(); renderGroups(); renderMatches(); renderPredictions(); renderLiveDashboard(); renderHistory(); renderApiBadge();
 }
 function renderApiBadge(){
   const hero = document.querySelector('.heroStats');
@@ -69,6 +69,7 @@ function renderApiBadge(){
 }
 function team(id){ return teams.find(t=>t.id===id) || teams.find(t=>t.name===id) || {id, name:id, flag:'', group:'?'}; }
 function buildFilters(){
+  if(!$('groupFilter') || !$('continentFilter') || !$('search')) return;
   const groups = [...new Set(teams.map(t=>t.group))].sort();
   $('groupFilter').innerHTML = '<option value="all">Allir riðlar</option>' + groups.map(g=>`<option value="${g}">Riðill ${g}</option>`).join('');
   const continents = [...new Set(teams.map(t=>(t.continent || '').split('/')[0]).filter(Boolean))].sort();
@@ -76,6 +77,7 @@ function buildFilters(){
   ['search','groupFilter','continentFilter'].forEach(id=>$(id).addEventListener('input', renderTeams));
 }
 function renderTeams(){
+  if(!$('teamGrid') || !$('search') || !$('groupFilter') || !$('continentFilter')) return;
   const q = $('search').value.trim().toLowerCase();
   const g = $('groupFilter').value;
   const c = $('continentFilter').value;
@@ -105,6 +107,7 @@ function standings(group){
   return Object.values(table).sort((a,b)=>b.pts-a.pts || b.gd-a.gd || b.gf-a.gf || team(a.id).name.localeCompare(team(b.id).name,'is'));
 }
 function renderGroups(){
+  if(!$('groupsWrap')) return;
   const groups = [...new Set(teams.map(t=>t.group))].sort();
   $('groupsWrap').innerHTML = groups.map(g=>`
     <article class="groupCard">
@@ -120,6 +123,7 @@ function renderGroups(){
   `).join('');
 }
 function renderMatches(){
+  if(!$('matchList')) return;
   $('matchList').innerHTML = matches.map(m=>{
     const h=team(m.home), a=team(m.away);
     const score = m.homeScore===null || m.awayScore===null ? 'vs' : `${m.homeScore} – ${m.awayScore}`;
@@ -280,7 +284,155 @@ function setupPredictionEvents(){
 }
 setupPredictionEvents();
 
+
+// -----------------------------
+// HM-stofan v0.4: Live kennslustofuskjár
+// -----------------------------
+const DAILY_QUESTIONS = [
+  {q:'Hvaða þjóð hefur oftast orðið heimsmeistari?', a:'Brasilía', choices:['Argentína','Brasilía','Frakkland','Þýskaland']},
+  {q:'Hvað fær lið mörg stig fyrir sigur í riðlakeppni?', a:'3 stig', choices:['1 stig','2 stig','3 stig','5 stig']},
+  {q:'Hvaða tvær þjóðir spila í leik þar sem staðan endar 1–1?', a:'Jafntefli', choices:['Heimasigur','Útisigur','Jafntefli','Aukaspyrna']},
+  {q:'Hvað kallast munurinn á skoruðum og fengnum mörkum?', a:'Markatala', choices:['Stigafjöldi','Markatala','Riðill','Leikhlé']},
+  {q:'Hvað eru margir riðlar í 48 liða HM 2026?', a:'12', choices:['8','10','12','16']},
+  {q:'Hvaða land varð heimsmeistari 2022?', a:'Argentína', choices:['Frakkland','Brasilía','Argentína','Króatía']},
+  {q:'Hvað er gott rannsóknarverkefni í HM-stofunni?', a:'Að bera þjóð saman við Ísland', choices:['Að giska án gagna','Að bera þjóð saman við Ísland','Að sleppa heimildum','Að telja bara mörk']}
+];
+let liveCountdownTimer = null;
+function dateObj(iso){
+  if(!iso) return null;
+  return new Date(iso.includes('T') ? iso : iso + 'T12:00:00');
+}
+function dayKey(d=new Date()){
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function seededIndex(length, salt=''){
+  if(!length) return 0;
+  const key = dayKey() + salt;
+  let n = 0;
+  for(const ch of key) n = (n * 31 + ch.charCodeAt(0)) >>> 0;
+  return n % length;
+}
+function formatCountdown(ms){
+  if(ms <= 0) return 'leikur er að hefjast';
+  const total = Math.floor(ms/1000);
+  const d = Math.floor(total/86400);
+  const h = Math.floor((total%86400)/3600);
+  const m = Math.floor((total%3600)/60);
+  const sec = total%60;
+  if(d > 0) return `${d} dagar · ${h} klst · ${m} mín`;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+function getNextMatch(){
+  const now = new Date();
+  return matches
+    .map((m, idx)=>({...m, idx, start:dateObj(m.date)}))
+    .filter(m=>m.start && m.start >= now)
+    .sort((a,b)=>a.start-b.start)[0] || null;
+}
+function renderNextMatch(){
+  const el = $('nextMatchContent');
+  if(!el) return;
+  const m = getNextMatch();
+  if(!m){ el.innerHTML = '<p class="smallNote">Enginn næsti leikur fannst í gögnum.</p>'; return; }
+  const h = team(m.home), a = team(m.away);
+  const ms = m.start - new Date();
+  el.innerHTML = `
+    <div class="bigCountdown">${formatCountdown(ms)}</div>
+    <div class="liveMatchTeams">
+      <span><img class="screenFlag" src="${h.flag}" alt="">${h.name}</span>
+      <b>vs</b>
+      <span><img class="screenFlag" src="${a.flag}" alt="">${a.name}</span>
+    </div>
+    <p>${m.start.toLocaleString('is-IS', {weekday:'long', day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'})} · Riðill ${m.group}<br>${m.venue || ''}</p>`;
+}
+function renderCountryOfDay(){
+  const el = $('countryOfDay');
+  if(!el) return;
+  const t = teams[seededIndex(teams.length, 'country')];
+  if(!t){ el.innerHTML = '<p>Þjóð dagsins kemur þegar gögn hafa hlaðist.</p>'; return; }
+  el.innerHTML = `
+    <div class="countryDayHero">
+      <img src="${t.flag}" alt="Fáni ${t.name}">
+      <div><h3>${t.name}</h3><span class="pill">Riðill ${t.group}</span></div>
+    </div>
+    <div class="miniFacts">
+      <span><b>Höfuðborg</b>${t.capital || '-'}</span>
+      <span><b>Íbúafjöldi</b>${t.population || '-'}</span>
+      <span><b>Atvinnugreinar</b>${t.industries || '-'}</span>
+    </div>
+    <p><strong>Verkefni:</strong> Finndu 3 atriði sem ${t.name} og Ísland eiga sameiginlegt og 3 atriði sem eru ólík.</p>`;
+}
+function renderQuestionOfDay(){
+  const el = $('questionOfDay');
+  if(!el) return;
+  const q = DAILY_QUESTIONS[seededIndex(DAILY_QUESTIONS.length, 'question')];
+  el.innerHTML = `<h3>${q.q}</h3><div class="answerGrid">${q.choices.map(c=>`<button type="button" data-answer="${c}">${c}</button>`).join('')}</div><p class="smallNote">Smelltu á svar til að sjá hvort það sé rétt.</p>`;
+  el.querySelectorAll('button[data-answer]').forEach(btn=>btn.addEventListener('click', ()=>{
+    const right = btn.dataset.answer === q.a;
+    btn.classList.add(right ? 'right' : 'wrong');
+    if(!right){
+      const correct = [...el.querySelectorAll('button')].find(b=>b.dataset.answer===q.a);
+      correct?.classList.add('right');
+    }
+  }));
+}
+function sameDate(a,b){ return a && a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
+function renderTodayMatches(){
+  const wrap = $('todayMatches');
+  if(!wrap) return;
+  const today = new Date();
+  const label = $('todayDateLabel');
+  if(label) label.textContent = today.toLocaleDateString('is-IS', {day:'numeric', month:'long'});
+  let list = matches.filter(m=>sameDate(dateObj(m.date), today));
+  if(!list.length){
+    const next = getNextMatch();
+    list = next ? matches.filter(m=>sameDate(dateObj(m.date), next.start)) : [];
+    if(label && next) label.textContent = `næsti leikdagur: ${next.start.toLocaleDateString('is-IS', {day:'numeric', month:'long'})}`;
+  }
+  wrap.innerHTML = list.length ? list.map(m=>{
+    const h=team(m.home), a=team(m.away);
+    const score = isFinished(m) ? `${m.homeScore} – ${m.awayScore}` : 'vs';
+    return `<div class="todayMatch"><span><img class="tinyFlag" src="${h.flag}">${h.name}</span><b>${score}</b><span><img class="tinyFlag" src="${a.flag}">${a.name}</span></div>`;
+  }).join('') : '<p class="smallNote">Engir leikir fundust í gögnunum.</p>';
+}
+function renderWorldCupPulse(){
+  const el = $('worldCupPulse');
+  if(!el) return;
+  const finished = matches.filter(isFinished);
+  const goals = finished.reduce((sum,m)=>sum+Number(m.homeScore||0)+Number(m.awayScore||0),0);
+  const draws = finished.filter(m=>Number(m.homeScore)===Number(m.awayScore)).length;
+  let biggest = null;
+  finished.forEach(m=>{ const diff = Math.abs(Number(m.homeScore)-Number(m.awayScore)); if(!biggest || diff > biggest.diff) biggest = {m,diff}; });
+  const biggestText = biggest ? `${team(biggest.m.home).name} ${biggest.m.homeScore}–${biggest.m.awayScore} ${team(biggest.m.away).name}` : 'bíður úrslita';
+  el.innerHTML = `
+    <div><strong>${finished.length}</strong><span>leikir búnir</span></div>
+    <div><strong>${goals}</strong><span>mörk</span></div>
+    <div><strong>${draws}</strong><span>jafntefli</span></div>
+    <div><strong>${biggestText}</strong><span>stærsti sigur</span></div>`;
+}
+function renderLiveLeaderboard(){
+  const el = $('liveLeaderboard');
+  if(!el) return;
+  const store = loadPredStore();
+  const rows = Object.values(store.players || {}).map(p=>({...p, totals:playerTotals(p)}))
+    .sort((a,b)=>b.totals.points-a.totals.points || b.totals.exact-a.totals.exact || a.name.localeCompare(b.name,'is')).slice(0,5);
+  el.innerHTML = rows.length ? rows.map((p,i)=>`<div class="leaderRow"><strong>${i===0?'🏆':i+1}</strong><div><b>${p.name}</b><small>${p.className || 'án hóps'}</small></div><span>${p.totals.points}</span></div>`).join('') : '<p class="smallNote">Topplistinn birtist þegar spár eru skráðar í þessum vafra.</p>';
+}
+function renderLiveDashboard(){
+  if(!$('live')) return;
+  renderNextMatch();
+  renderCountryOfDay();
+  renderQuestionOfDay();
+  renderTodayMatches();
+  renderWorldCupPulse();
+  renderLiveLeaderboard();
+  if(liveCountdownTimer) clearInterval(liveCountdownTimer);
+  liveCountdownTimer = setInterval(renderNextMatch, 1000);
+}
+$('refreshLiveBtn')?.addEventListener('click', renderLiveDashboard);
+
 function renderHistory(){
+  if(!$('winnerStats') || !$('historyTimeline')) return;
   const counts = history.reduce((acc,x)=>{acc[x.winner]=(acc[x.winner]||0)+1; return acc;},{});
   $('winnerStats').innerHTML = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<span class="winnerChip">${k}: ${v}</span>`).join('');
   $('historyTimeline').innerHTML = history.slice().reverse().map(h=>`<article class="timeCard"><strong>${h.year}</strong><h3>${h.winner}</h3><p>Gestgjafi: ${h.host}<br>Úrslit: ${h.winner} – ${h.runnerUp}<br>Skor: ${h.score}</p></article>`).join('');
@@ -305,8 +457,10 @@ window.openTeam = function(id){
   `;
   $('teamModal').showModal();
 }
-$('closeModal').addEventListener('click', ()=>$('teamModal').close());
-$('teamModal').addEventListener('click', e=>{ if(e.target.id==='teamModal') $('teamModal').close(); });
+if($('closeModal') && $('teamModal')){
+  $('closeModal').addEventListener('click', ()=>$('teamModal').close());
+  $('teamModal').addEventListener('click', e=>{ if(e.target.id==='teamModal') $('teamModal').close(); });
+}
 loadData().catch(err=>{
   document.body.innerHTML = `<main class="panel"><h1>Villa við að hlaða gögn</h1><p>Prófaðu að keyra vefinn með <code>python -m http.server 8000</code> eða athugaðu <code>config.js</code>.</p><pre>${err}</pre></main>`;
 });
