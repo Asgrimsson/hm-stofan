@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Heimskort · HM-stofan 2026</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="mapBody">
+  <header class="subHero mapHero">
+    <nav class="topbar">
+      <div class="brand"><span class="ball">🌍</span><span>HM Heimskort</span></div>
+      <div class="navlinks">
+        <a href="index.html">Forsíða</a>
+        <a href="verkefni.html">Verkefni</a>
+        <a href="leikjasalur.html">Leikjasalur</a>
+        <a href="kennarabord.html">Kennaraborð</a>
+        <a href="skjar.html">Live skjár</a>
+      </div>
+    </nav>
+    <section class="heroContent compactHero">
+      <p class="eyebrow">v0.8 · Landafræðiáskorun</p>
+      <h1>Heimskort með HM-þjóðum</h1>
+      <p class="lead">Skoðaðu hvar þátttökuþjóðirnar eru, berðu saman heimsálfur og prófaðu „Finndu landið“ áskorunina.</p>
+      <div class="heroStats">
+        <div><strong>48</strong><span>þjóðir á korti</span></div>
+        <div><strong id="continentCount">6</strong><span>svæði</span></div>
+        <div><strong id="geoScoreHero">0</strong><span>landafræðistig</span></div>
+        <div><strong>Ísland</strong><span>viðmið</span></div>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="panel mapControlPanel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Kortaleiðangur</p>
+          <h2>Smelltu á þjóð eða spilaðu landafræðiáskorun</h2>
+        </div>
+        <div class="buttonRow">
+          <button id="geoChallengeBtn" class="primaryBtn" type="button">Byrja „Finndu landið“</button>
+          <button id="newGeoQuestion" class="ghostBtn" type="button">Ný áskorun</button>
+          <button id="resetGeoScore" class="dangerBtn" type="button">Hreinsa stig</button>
+        </div>
+      </div>
+      <div class="mapFilters">
+        <label>Heimsálfa / svæði
+          <select id="continentFilter"><option value="all">Allar þjóðir</option></select>
+        </label>
+        <label>Leita
+          <input id="mapSearch" type="search" placeholder="Leita að þjóð...">
+        </label>
+      </div>
+      <div id="geoQuestion" class="geoQuestionBox">Veldu þjóð á kortinu eða smelltu á „Byrja Finndu landið“.</div>
+    </section>
+
+    <section class="mapLayout">
+      <div class="panel worldMapPanel">
+        <div class="worldMap" id="worldMap" aria-label="Heimskort með HM þjóðum">
+          <div class="continentBlob northAmerica"><span>Norður-Ameríka</span></div>
+          <div class="continentBlob southAmerica"><span>Suður-Ameríka</span></div>
+          <div class="continentBlob europe"><span>Evrópa</span></div>
+          <div class="continentBlob africa"><span>Afríka</span></div>
+          <div class="continentBlob asia"><span>Asía</span></div>
+          <div class="continentBlob oceania"><span>Eyjaálfa</span></div>
+          <div class="icelandMarker" title="Ísland">🇮🇸 Ísland</div>
+        </div>
+      </div>
+      <aside class="panel mapInfoPanel">
+        <p class="eyebrow">Þjóðaspjald á korti</p>
+        <div id="mapInfo" class="mapInfoEmpty">
+          <h2>Veldu punkt á kortinu</h2>
+          <p>Þá færðu fána, höfuðborg, riðil, heimsálfu og áætlaða fjarlægð frá Íslandi.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="panel geoTasksPanel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Verkefnahugmyndir</p>
+          <h2>Landafræði í HM-stofunni</h2>
+        </div>
+        <button class="ghostBtn" type="button" onclick="window.print()">Prenta kortaverkefni</button>
+      </div>
+      <div class="teacherGrid">
+        <article><h3>1. Finndu fjarlægð</h3><p>Veldu 3 þjóðir og raðaðu þeim frá Íslandi eftir áætlaðri fjarlægð.</p></article>
+        <article><h3>2. Heimsálfur</h3><p>Teldu hvað eru margar þjóðir frá Evrópu, Afríku, Asíu, Ameríku og Eyjaálfu.</p></article>
+        <article><h3>3. Ferð stuðningsmannsins</h3><p>Veldu þjóð og skrifaðu hvernig þú myndir ferðast frá Íslandi til landsins.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>HM-stofan v0.8 · Heimskort · Landafræðiáskorun · Fjarlægð frá Íslandi</p>
+  </footer>
+
+  <script>
+    const teams = [{"id": "MEX", "name": "Mexíkó", "english": "Mexico", "group": "A", "flag": "https://flagcdn.com/mx.svg", "capital": "Mexíkóborg", "population": "um 129 milljónir", "continent": "Norður-Ameríka", "languages": "spænska", "currency": "mexíkóskur pesi", "industries": "bílaframleiðsla, olía, ferðaþjónusta, matvælaframleiðsla, rafeindaiðnaður", "wcBest": "16-liða úrslit / fjórðungsúrslit 1970 og 1986", "fact": "Mexíkó er eitt gestgjafalandanna 2026 og opnunarleikurinn fer fram í Mexíkóborg.", "lat": 23.6, "lon": -102.5, "x": 21.53, "y": 36.89}, {"id": "RSA", "name": "Suður-Afríka", "english": "South Africa", "group": "A", "flag": "https://flagcdn.com/za.svg", "capital": "Pretoría, Höfðaborg og Bloemfontein", "population": "um 60 milljónir", "continent": "Afríka", "languages": "11 opinber tungumál, m.a. zúlú, xhosa, afríkanska og enska", "currency": "rand", "industries": "námuvinnsla, bílar, ferðaþjónusta, landbúnaður, fjármál", "wcBest": "riðlakeppni", "fact": "Suður-Afríka hélt HM 2010, fyrsta HM sem var haldið í Afríku.", "lat": -30.6, "lon": 22.9, "x": 56.36, "y": 67.0}, {"id": "KOR", "name": "Suður-Kórea", "english": "Korea Republic", "group": "A", "flag": "https://flagcdn.com/kr.svg", "capital": "Seúl", "population": "um 52 milljónir", "continent": "Asía", "languages": "kóreska", "currency": "won", "industries": "rafeindatækni, skipasmíði, bílar, hálfleiðarar, tækni", "wcBest": "4. sæti 2002", "fact": "Suður-Kórea náði í undanúrslit á heimavelli árið 2002.", "lat": 36.5, "lon": 127.9, "x": 85.53, "y": 29.72}, {"id": "CZE", "name": "Tékkland", "english": "Czechia", "group": "A", "flag": "https://flagcdn.com/cz.svg", "capital": "Prag", "population": "um 11 milljónir", "continent": "Evrópa", "languages": "tékkneska", "currency": "tékknesk króna", "industries": "bílar, vélaiðnaður, bjórframleiðsla, ferðaþjónusta, tækni", "wcBest": "úrslitaleikur sem Tékkóslóvakía 1934 og 1962", "fact": "Tékkland á sterka knattspyrnusögu í gegnum Tékkóslóvakíu.", "lat": 49.8, "lon": 15.5, "x": 54.31, "y": 22.33}, {"id": "CAN", "name": "Kanada", "english": "Canada", "group": "B", "flag": "https://flagcdn.com/ca.svg", "capital": "Ottawa", "population": "um 40 milljónir", "continent": "Norður-Ameríka", "languages": "enska og franska", "currency": "kanadadalur", "industries": "orka, námuvinnsla, skógrækt, tækni, þjónusta", "wcBest": "riðlakeppni", "fact": "Kanada er eitt gestgjafalandanna 2026.", "lat": 56.1, "lon": -106.3, "x": 20.47, "y": 18.83}, {"id": "BIH", "name": "Bosnía og Hersegóvína", "english": "Bosnia and Herzegovina", "group": "B", "flag": "https://flagcdn.com/ba.svg", "capital": "Sarajevo", "population": "um 3,2 milljónir", "continent": "Evrópa", "languages": "bosníska, króatíska og serbneska", "currency": "breytanlegt mark", "industries": "málmiðnaður, orka, timbur, ferðaþjónusta, landbúnaður", "wcBest": "riðlakeppni 2014", "fact": "Sarajevo hélt vetrarólympíuleikana 1984.", "lat": 43.9, "lon": 17.7, "x": 54.92, "y": 25.61}, {"id": "SUI", "name": "Sviss", "english": "Switzerland", "group": "B", "flag": "https://flagcdn.com/ch.svg", "capital": "Bern", "population": "um 9 milljónir", "continent": "Evrópa", "languages": "þýska, franska, ítalska og rómanska", "currency": "svissneskur franki", "industries": "lyfjaiðnaður, fjármál, úrsmíði, tækni, ferðaþjónusta", "wcBest": "fjórðungsúrslit", "fact": "Sviss er með fjögur opinber tungumál.", "lat": 46.8, "lon": 8.2, "x": 52.28, "y": 24.0}, {"id": "QAT", "name": "Katar", "english": "Qatar", "group": "B", "flag": "https://flagcdn.com/qa.svg", "capital": "Doha", "population": "um 3 milljónir", "continent": "Asía", "languages": "arabíska", "currency": "kataríal", "industries": "jarðgas, olía, flug, fjármál, byggingariðnaður", "wcBest": "riðlakeppni 2022", "fact": "Katar hélt HM 2022.", "lat": 25.3, "lon": 51.2, "x": 64.22, "y": 35.94}, {"id": "BRA", "name": "Brasilía", "english": "Brazil", "group": "C", "flag": "https://flagcdn.com/br.svg", "capital": "Brasília", "population": "um 203 milljónir", "continent": "Suður-Ameríka", "languages": "portúgalska", "currency": "real", "industries": "landbúnaður, námuvinnsla, olía, bílar, flugvélar", "wcBest": "heimsmeistari 5 sinnum", "fact": "Brasilía er sigursælasta þjóð HM-sögunnar.", "lat": -14.2, "lon": -51.9, "x": 35.58, "y": 57.89}, {"id": "HAI", "name": "Haítí", "english": "Haiti", "group": "C", "flag": "https://flagcdn.com/ht.svg", "capital": "Port-au-Prince", "population": "um 11,5 milljónir", "continent": "Norður-Ameríka/Karabíska hafið", "languages": "haítísk kreólska og franska", "currency": "gourde", "industries": "landbúnaður, textíll, þjónusta, ferðaþjónusta", "wcBest": "riðlakeppni 1974", "fact": "Haítí er aftur komið á HM eftir langt hlé.", "lat": 19.0, "lon": -72.3, "x": 29.92, "y": 39.44}, {"id": "MAR", "name": "Marokkó", "english": "Morocco", "group": "C", "flag": "https://flagcdn.com/ma.svg", "capital": "Rabat", "population": "um 37 milljónir", "continent": "Afríka", "languages": "arabíska og amazigh", "currency": "dirham", "industries": "fosföt, landbúnaður, textíll, ferðaþjónusta, bílar", "wcBest": "4. sæti 2022", "fact": "Marokkó varð fyrsta afríska liðið til að komast í undanúrslit HM.", "lat": 31.8, "lon": -7.1, "x": 48.03, "y": 32.33}, {"id": "SCO", "name": "Skotland", "english": "Scotland", "group": "C", "flag": "https://flagcdn.com/gb-sct.svg", "capital": "Edinborg", "population": "um 5,5 milljónir", "continent": "Evrópa", "languages": "enska, skosk gelíska og skoska", "currency": "pund sterling", "industries": "orka, whisky, ferðaþjónusta, fjármál, menntun", "wcBest": "riðlakeppni", "fact": "Skotland á ástríðufulla stuðningsmenn og langa fótboltasögu.", "lat": 56.5, "lon": -4.2, "x": 48.83, "y": 18.61}, {"id": "USA", "name": "Bandaríkin", "english": "USA", "group": "D", "flag": "https://flagcdn.com/us.svg", "capital": "Washington, D.C.", "population": "um 335 milljónir", "continent": "Norður-Ameríka", "languages": "enska", "currency": "Bandaríkjadalur", "industries": "tækni, fjármál, kvikmyndir, landbúnaður, iðnaður", "wcBest": "3. sæti 1930", "fact": "Bandaríkin eru eitt gestgjafalandanna 2026.", "lat": 39.8, "lon": -98.6, "x": 22.61, "y": 27.89}, {"id": "PAR", "name": "Paragvæ", "english": "Paraguay", "group": "D", "flag": "https://flagcdn.com/py.svg", "capital": "Asunción", "population": "um 7 milljónir", "continent": "Suður-Ameríka", "languages": "spænska og gvaraní", "currency": "gvaraní", "industries": "landbúnaður, nautgriparækt, vatnsafl, soja, þjónusta", "wcBest": "fjórðungsúrslit 2010", "fact": "Paragvæ hefur oft verið þekkt fyrir sterkan varnarleik.", "lat": -23.4, "lon": -58.4, "x": 33.78, "y": 63.0}, {"id": "AUS", "name": "Ástralía", "english": "Australia", "group": "D", "flag": "https://flagcdn.com/au.svg", "capital": "Canberra", "population": "um 27 milljónir", "continent": "Eyjaálfa", "languages": "enska", "currency": "ástralskur dalur", "industries": "námuvinnsla, landbúnaður, menntun, ferðaþjónusta, þjónusta", "wcBest": "16-liða úrslit", "fact": "Ástralía keppir í Asíusambandinu í knattspyrnu.", "lat": -25.3, "lon": 133.8, "x": 87.17, "y": 64.06}, {"id": "TUR", "name": "Tyrkland", "english": "Türkiye", "group": "D", "flag": "https://flagcdn.com/tr.svg", "capital": "Ankara", "population": "um 85 milljónir", "continent": "Evrópa/Asía", "languages": "tyrkneska", "currency": "tyrknesk líra", "industries": "textíll, bílar, ferðaþjónusta, landbúnaður, byggingariðnaður", "wcBest": "3. sæti 2002", "fact": "Tyrkland náði frábærum árangri á HM 2002.", "lat": 39.0, "lon": 35.2, "x": 59.78, "y": 28.33}, {"id": "GER", "name": "Þýskaland", "english": "Germany", "group": "E", "flag": "https://flagcdn.com/de.svg", "capital": "Berlín", "population": "um 84 milljónir", "continent": "Evrópa", "languages": "þýska", "currency": "evra", "industries": "bílar, vélaiðnaður, efnavörur, tækni, lyf", "wcBest": "heimsmeistari 4 sinnum", "fact": "Þýskaland hefur unnið HM fjórum sinnum.", "lat": 51.2, "lon": 10.5, "x": 52.92, "y": 21.56}, {"id": "CIV", "name": "Fílabeinsströndin", "english": "Côte d'Ivoire", "group": "E", "flag": "https://flagcdn.com/ci.svg", "capital": "Yamoussoukro", "population": "um 30 milljónir", "continent": "Afríka", "languages": "franska", "currency": "vesturafrískur franki", "industries": "kakó, kaffi, olía, landbúnaður, þjónusta", "wcBest": "riðlakeppni", "fact": "Fílabeinsströndin er einn stærsti kakóframleiðandi heims.", "lat": 7.5, "lon": -5.5, "x": 48.47, "y": 45.83}, {"id": "ECU", "name": "Ekvador", "english": "Ecuador", "group": "E", "flag": "https://flagcdn.com/ec.svg", "capital": "Quito", "population": "um 18 milljónir", "continent": "Suður-Ameríka", "languages": "spænska", "currency": "Bandaríkjadalur", "industries": "olía, bananar, sjávarútvegur, blóm, ferðaþjónusta", "wcBest": "16-liða úrslit 2006", "fact": "Quito er ein hæst liggjandi höfuðborg heims.", "lat": -1.8, "lon": -78.2, "x": 28.28, "y": 51.0}, {"id": "CUW", "name": "Curaçao", "english": "Curaçao", "group": "E", "flag": "https://flagcdn.com/cw.svg", "capital": "Willemstad", "population": "um 150 þúsund", "continent": "Karabíska hafið", "languages": "papiamentu, hollenska og enska", "currency": "hollenskur Antillugyllini", "industries": "ferðaþjónusta, olíuvinnsla, siglingar, fjármál, þjónusta", "wcBest": "fyrsta þátttaka", "fact": "Curaçao er meðal minnstu þjóða/svæða sem hafa komist á HM.", "lat": 12.2, "lon": -69.0, "x": 30.83, "y": 43.22}, {"id": "NED", "name": "Holland", "english": "Netherlands", "group": "F", "flag": "https://flagcdn.com/nl.svg", "capital": "Amsterdam", "population": "um 18 milljónir", "continent": "Evrópa", "languages": "hollenska", "currency": "evra", "industries": "landbúnaður, flutningar, tækni, fjármál, efnavörur", "wcBest": "úrslitaleikur 1974, 1978 og 2010", "fact": "Holland er þekkt fyrir Total Football og sterka fótboltahefð.", "lat": 52.1, "lon": 5.3, "x": 51.47, "y": 21.06}, {"id": "JPN", "name": "Japan", "english": "Japan", "group": "F", "flag": "https://flagcdn.com/jp.svg", "capital": "Tókýó", "population": "um 124 milljónir", "continent": "Asía", "languages": "japanska", "currency": "jen", "industries": "bílar, rafeindatækni, vélmenni, tækni, skipasmíði", "wcBest": "16-liða úrslit", "fact": "Japan hefur orðið eitt öflugasta lið Asíu.", "lat": 36.2, "lon": 138.3, "x": 88.42, "y": 29.89}, {"id": "SWE", "name": "Svíþjóð", "english": "Sweden", "group": "F", "flag": "https://flagcdn.com/se.svg", "capital": "Stokkhólmur", "population": "um 10,5 milljónir", "continent": "Evrópa", "languages": "sænska", "currency": "sænsk króna", "industries": "tækni, bílar, skógarafurðir, tónlist, lyf", "wcBest": "2. sæti 1958", "fact": "Svíþjóð komst í úrslit á heimavelli 1958.", "lat": 60.1, "lon": 18.6, "x": 55.17, "y": 16.61}, {"id": "TUN", "name": "Túnis", "english": "Tunisia", "group": "F", "flag": "https://flagcdn.com/tn.svg", "capital": "Túnis", "population": "um 12 milljónir", "continent": "Afríka", "languages": "arabíska", "currency": "túnískur dínar", "industries": "ferðaþjónusta, textíll, ólífuolía, fosföt, þjónusta", "wcBest": "riðlakeppni", "fact": "Túnis var fyrsta afríska liðið til að vinna leik á HM, árið 1978.", "lat": 33.9, "lon": 9.5, "x": 52.64, "y": 31.17}, {"id": "BEL", "name": "Belgía", "english": "Belgium", "group": "G", "flag": "https://flagcdn.com/be.svg", "capital": "Brussel", "population": "um 12 milljónir", "continent": "Evrópa", "languages": "hollenska, franska og þýska", "currency": "evra", "industries": "lyf, efnavörur, súkkulaði, flutningar, þjónusta", "wcBest": "3. sæti 2018", "fact": "Brussel er mikilvæg miðstöð Evrópusambandsins.", "lat": 50.5, "lon": 4.5, "x": 51.25, "y": 21.94}, {"id": "IRN", "name": "Íran", "english": "IR Iran", "group": "G", "flag": "https://flagcdn.com/ir.svg", "capital": "Teheran", "population": "um 89 milljónir", "continent": "Asía", "languages": "persneska", "currency": "ríal", "industries": "olía, gas, bílar, landbúnaður, handverk", "wcBest": "riðlakeppni", "fact": "Íran er eitt sigursælasta landslið Asíu.", "lat": 32.4, "lon": 53.7, "x": 64.92, "y": 32.0}, {"id": "NZL", "name": "Nýja-Sjáland", "english": "New Zealand", "group": "G", "flag": "https://flagcdn.com/nz.svg", "capital": "Wellington", "population": "um 5,2 milljónir", "continent": "Eyjaálfa", "languages": "enska og maorí", "currency": "nýsjálenskur dalur", "industries": "landbúnaður, mjólkurvörur, ferðaþjónusta, kvikmyndir, þjónusta", "wcBest": "riðlakeppni", "fact": "Nýja-Sjáland er þekkt fyrir All Whites í knattspyrnu.", "lat": -40.9, "lon": 174.9, "x": 98.58, "y": 72.72}, {"id": "EGY", "name": "Egyptaland", "english": "Egypt", "group": "G", "flag": "https://flagcdn.com/eg.svg", "capital": "Kaíró", "population": "um 113 milljónir", "continent": "Afríka", "languages": "arabíska", "currency": "egypskt pund", "industries": "ferðaþjónusta, Suez-skurðurinn, landbúnaður, gas, textíll", "wcBest": "riðlakeppni", "fact": "Egyptaland á eina elstu menningarsögu heims.", "lat": 26.8, "lon": 30.8, "x": 58.56, "y": 35.11}, {"id": "URU", "name": "Úrúgvæ", "english": "Uruguay", "group": "H", "flag": "https://flagcdn.com/uy.svg", "capital": "Montevideo", "population": "um 3,5 milljónir", "continent": "Suður-Ameríka", "languages": "spænska", "currency": "úrúgvæskur pesi", "industries": "nautgriparækt, landbúnaður, ferðaþjónusta, tækni, þjónusta", "wcBest": "heimsmeistari 2 sinnum", "fact": "Úrúgvæ vann fyrsta HM árið 1930.", "lat": -32.5, "lon": -55.8, "x": 34.5, "y": 68.06}, {"id": "KSA", "name": "Sádi-Arabía", "english": "Saudi Arabia", "group": "H", "flag": "https://flagcdn.com/sa.svg", "capital": "Ríad", "population": "um 36 milljónir", "continent": "Asía", "languages": "arabíska", "currency": "sádíarabískur ríal", "industries": "olía, gas, byggingar, fjármál, ferðaþjónusta", "wcBest": "16-liða úrslit 1994", "fact": "Sádi-Arabía vann Argentínu í einum óvæntasta leik HM 2022.", "lat": 23.9, "lon": 45.1, "x": 62.53, "y": 36.72}, {"id": "ESP", "name": "Spánn", "english": "Spain", "group": "H", "flag": "https://flagcdn.com/es.svg", "capital": "Madrid", "population": "um 48 milljónir", "continent": "Evrópa", "languages": "spænska og fleiri svæðistungumál", "currency": "evra", "industries": "ferðaþjónusta, bílar, landbúnaður, textíll, orka", "wcBest": "heimsmeistari 2010", "fact": "Spánn varð heimsmeistari í fyrsta sinn árið 2010.", "lat": 40.5, "lon": -3.7, "x": 48.97, "y": 27.5}, {"id": "CPV", "name": "Grænhöfðaeyjar", "english": "Cabo Verde", "group": "H", "flag": "https://flagcdn.com/cv.svg", "capital": "Praia", "population": "um 600 þúsund", "continent": "Afríka", "languages": "portúgalska og kreólska", "currency": "grænhöfðeyskur skúti", "industries": "ferðaþjónusta, fiskveiðar, þjónusta, flutningar, endurnýjanleg orka", "wcBest": "fyrsta þátttaka", "fact": "Grænhöfðaeyjar eru eyjaríki í Atlantshafi.", "lat": 16.0, "lon": -24.0, "x": 43.33, "y": 41.11}, {"id": "FRA", "name": "Frakkland", "english": "France", "group": "I", "flag": "https://flagcdn.com/fr.svg", "capital": "París", "population": "um 68 milljónir", "continent": "Evrópa", "languages": "franska", "currency": "evra", "industries": "flugvélar, lúxusvörur, ferðaþjónusta, landbúnaður, orka", "wcBest": "heimsmeistari 1998 og 2018", "fact": "Frakkland hefur unnið HM tvisvar.", "lat": 46.2, "lon": 2.2, "x": 50.61, "y": 24.33}, {"id": "SEN", "name": "Senegal", "english": "Senegal", "group": "I", "flag": "https://flagcdn.com/sn.svg", "capital": "Dakar", "population": "um 18 milljónir", "continent": "Afríka", "languages": "franska og wolof", "currency": "vesturafrískur franki", "industries": "fiskveiðar, jarðhnetur, fosföt, ferðaþjónusta, þjónusta", "wcBest": "fjórðungsúrslit 2002", "fact": "Senegal vann heimsmeistara Frakka í opnunarleik HM 2002.", "lat": 14.5, "lon": -14.5, "x": 45.97, "y": 41.94}, {"id": "IRQ", "name": "Írak", "english": "Iraq", "group": "I", "flag": "https://flagcdn.com/iq.svg", "capital": "Bagdad", "population": "um 46 milljónir", "continent": "Asía", "languages": "arabíska og kúrdíska", "currency": "írakskur dínar", "industries": "olía, gas, landbúnaður, byggingar, þjónusta", "wcBest": "riðlakeppni 1986", "fact": "Írak er aftur í sviðsljósinu á HM 2026.", "lat": 33.2, "lon": 43.7, "x": 62.14, "y": 31.56}, {"id": "NOR", "name": "Noregur", "english": "Norway", "group": "I", "flag": "https://flagcdn.com/no.svg", "capital": "Osló", "population": "um 5,5 milljónir", "continent": "Evrópa", "languages": "norska", "currency": "norsk króna", "industries": "olía, gas, sjávarútvegur, skip, endurnýjanleg orka", "wcBest": "16-liða úrslit 1998", "fact": "Noregur á sterkt lið með stórstjörnum í sóknarleik.", "lat": 60.5, "lon": 8.5, "x": 52.36, "y": 16.39}, {"id": "ARG", "name": "Argentína", "english": "Argentina", "group": "J", "flag": "https://flagcdn.com/ar.svg", "capital": "Buenos Aires", "population": "um 46 milljónir", "continent": "Suður-Ameríka", "languages": "spænska", "currency": "argentínskur pesi", "industries": "landbúnaður, nautakjöt, vín, orka, tækni", "wcBest": "heimsmeistari 3 sinnum", "fact": "Argentína vann HM 2022 með Lionel Messi í lykilhlutverki.", "lat": -38.4, "lon": -63.6, "x": 32.33, "y": 71.33}, {"id": "ALG", "name": "Alsír", "english": "Algeria", "group": "J", "flag": "https://flagcdn.com/dz.svg", "capital": "Algeirsborg", "population": "um 46 milljónir", "continent": "Afríka", "languages": "arabíska og amazigh", "currency": "alsírskur dínar", "industries": "olía, gas, landbúnaður, byggingariðnaður, þjónusta", "wcBest": "16-liða úrslit 2014", "fact": "Alsír á sterka fótboltahefð í Norður-Afríku.", "lat": 28.0, "lon": 1.7, "x": 50.47, "y": 34.44}, {"id": "AUT", "name": "Austurríki", "english": "Austria", "group": "J", "flag": "https://flagcdn.com/at.svg", "capital": "Vín", "population": "um 9 milljónir", "continent": "Evrópa", "languages": "þýska", "currency": "evra", "industries": "vélaiðnaður, ferðaþjónusta, tónlistarmenning, tækni, þjónusta", "wcBest": "3. sæti 1954", "fact": "Austurríki á langa fótboltasögu í Evrópu.", "lat": 47.5, "lon": 14.6, "x": 54.06, "y": 23.61}, {"id": "JOR", "name": "Jórdanía", "english": "Jordan", "group": "J", "flag": "https://flagcdn.com/jo.svg", "capital": "Amman", "population": "um 11 milljónir", "continent": "Asía", "languages": "arabíska", "currency": "jórdanskur dínar", "industries": "ferðaþjónusta, fosföt, potask, þjónusta, upplýsingatækni", "wcBest": "fyrsta þátttaka", "fact": "Petra í Jórdaníu er eitt þekktasta fornleifasvæði heims.", "lat": 31.2, "lon": 36.5, "x": 60.14, "y": 32.67}, {"id": "POR", "name": "Portúgal", "english": "Portugal", "group": "K", "flag": "https://flagcdn.com/pt.svg", "capital": "Lissabon", "population": "um 10,5 milljónir", "continent": "Evrópa", "languages": "portúgalska", "currency": "evra", "industries": "ferðaþjónusta, vín, textíll, tækni, sjávarútvegur", "wcBest": "3. sæti 1966", "fact": "Portúgal er þekkt fyrir tæknilega sterka leikmenn og mikla fótboltahefð.", "lat": 39.4, "lon": -8.2, "x": 47.72, "y": 28.11}, {"id": "COD", "name": "Kongó DR", "english": "Congo DR", "group": "K", "flag": "https://flagcdn.com/cd.svg", "capital": "Kinshasa", "population": "um 105 milljónir", "continent": "Afríka", "languages": "franska og fleiri tungumál", "currency": "kongóskur franki", "industries": "námuvinnsla, kopar, kóbalt, landbúnaður, vatnsafl", "wcBest": "riðlakeppni sem Zaír 1974", "fact": "Kongó DR er auðugt af mikilvægum jarðefnum.", "lat": -4.0, "lon": 21.8, "x": 56.06, "y": 52.22}, {"id": "UZB", "name": "Úsbekistan", "english": "Uzbekistan", "group": "K", "flag": "https://flagcdn.com/uz.svg", "capital": "Taskent", "population": "um 37 milljónir", "continent": "Asía", "languages": "úsbekska", "currency": "som", "industries": "bómull, gull, gas, textíll, landbúnaður", "wcBest": "fyrsta þátttaka", "fact": "Úsbekistan er að taka þátt á HM í fyrsta sinn.", "lat": 41.4, "lon": 64.6, "x": 67.94, "y": 27.0}, {"id": "COL", "name": "Kólumbía", "english": "Colombia", "group": "K", "flag": "https://flagcdn.com/co.svg", "capital": "Bogotá", "population": "um 52 milljónir", "continent": "Suður-Ameríka", "languages": "spænska", "currency": "kólumbískur pesi", "industries": "kaffi, olía, blóm, námuvinnsla, ferðaþjónusta", "wcBest": "fjórðungsúrslit 2014", "fact": "Kólumbía er fræg fyrir ástríðufulla fótboltamenningu.", "lat": 4.6, "lon": -74.1, "x": 29.42, "y": 47.44}, {"id": "ENG", "name": "England", "english": "England", "group": "L", "flag": "https://flagcdn.com/gb-eng.svg", "capital": "London", "population": "um 57 milljónir", "continent": "Evrópa", "languages": "enska", "currency": "pund sterling", "industries": "fjármál, tækni, menning, menntun, ferðaþjónusta", "wcBest": "heimsmeistari 1966", "fact": "England vann HM á heimavelli árið 1966.", "lat": 52.4, "lon": -1.2, "x": 49.67, "y": 20.89}, {"id": "GHA", "name": "Gana", "english": "Ghana", "group": "L", "flag": "https://flagcdn.com/gh.svg", "capital": "Accra", "population": "um 34 milljónir", "continent": "Afríka", "languages": "enska og mörg staðbundin tungumál", "currency": "cedi", "industries": "gull, kakó, olía, landbúnaður, þjónusta", "wcBest": "fjórðungsúrslit 2010", "fact": "Gana var aðeins einni vítaspyrnu frá undanúrslitum HM 2010.", "lat": 7.9, "lon": -1.0, "x": 49.72, "y": 45.61}, {"id": "PAN", "name": "Panama", "english": "Panama", "group": "L", "flag": "https://flagcdn.com/pa.svg", "capital": "Panama-borg", "population": "um 4,5 milljónir", "continent": "Norður-Ameríka/Mið-Ameríka", "languages": "spænska", "currency": "balboa og Bandaríkjadalur", "industries": "Panamaskurðurinn, flutningar, bankar, ferðaþjónusta, þjónusta", "wcBest": "riðlakeppni 2018", "fact": "Panamaskurðurinn er ein mikilvægasta siglingaleið heims.", "lat": 8.5, "lon": -80.0, "x": 27.78, "y": 45.28}, {"id": "CRO", "name": "Króatía", "english": "Croatia", "group": "L", "flag": "https://flagcdn.com/hr.svg", "capital": "Zagreb", "population": "um 3,9 milljónir", "continent": "Evrópa", "languages": "króatíska", "currency": "evra", "industries": "ferðaþjónusta, skipasmíði, matvæli, lyf, þjónusta", "wcBest": "2. sæti 2018", "fact": "Króatía hefur náð ótrúlegum árangri miðað við fólksfjölda.", "lat": 45.1, "lon": 15.2, "x": 54.22, "y": 24.94}];
+    const ICELAND = { lat: 64.9631, lon: -19.0208 };
+    const STORE = 'hmstofa_geo_v08';
+    let currentTarget = null;
+    let challengeActive = false;
+    const $ = id => document.getElementById(id);
+
+    function loadGeoScore(){
+      try { return JSON.parse(localStorage.getItem(STORE)) || {score:0,tries:0}; } catch { return {score:0,tries:0}; }
+    }
+    function saveGeoScore(delta){
+      const s = loadGeoScore(); s.score += delta; s.tries += 1; localStorage.setItem(STORE, JSON.stringify(s)); renderScore();
+    }
+    function renderScore(){ $('geoScoreHero').textContent = loadGeoScore().score || 0; }
+    function toRad(v){ return v * Math.PI / 180; }
+    function distanceKm(a,b){
+      const R=6371, dLat=toRad(b.lat-a.lat), dLon=toRad(b.lon-a.lon);
+      const x=Math.sin(dLat/2)**2 + Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLon/2)**2;
+      return Math.round(R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x)));
+    }
+    function continentBase(cont){
+      if(cont.includes('Evrópa')) return 'Evrópa';
+      if(cont.includes('Afríka')) return 'Afríka';
+      if(cont.includes('Asía')) return 'Asía';
+      if(cont.includes('Suður-Ameríka')) return 'Suður-Ameríka';
+      if(cont.includes('Eyjaálfa')) return 'Eyjaálfa';
+      return 'Norður-Ameríka/Karabíska';
+    }
+    function setupFilters(){
+      const values = [...new Set(teams.map(t=>continentBase(t.continent)))].sort();
+      $('continentCount').textContent = values.length;
+      $('continentFilter').innerHTML += values.map(v=>`<option value="${v}">${v}</option>`).join('');
+      $('continentFilter').addEventListener('change', renderDots);
+      $('mapSearch').addEventListener('input', renderDots);
+    }
+    function renderDots(){
+      document.querySelectorAll('.countryDot').forEach(el=>el.remove());
+      const filter = $('continentFilter').value;
+      const q = $('mapSearch').value.trim().toLowerCase();
+      teams.forEach(t=>{
+        const base = continentBase(t.continent);
+        const show = (filter==='all' || base===filter) && (!q || t.name.toLowerCase().includes(q) || t.english.toLowerCase().includes(q));
+        if(!show) return;
+        const btn = document.createElement('button');
+        btn.className = 'countryDot';
+        btn.style.left = t.x + '%'; btn.style.top = t.y + '%';
+        btn.title = `${t.name} · Riðill ${t.group}`;
+        btn.innerHTML = `<img src="${t.flag}" alt=""><span>${t.name}</span>`;
+        btn.addEventListener('click',()=>selectTeam(t, btn));
+        $('worldMap').appendChild(btn);
+      });
+    }
+    function selectTeam(t, btn){
+      document.querySelectorAll('.countryDot').forEach(d=>d.classList.remove('selected','wrongDot','rightDot'));
+      btn.classList.add('selected');
+      if(challengeActive && currentTarget){
+        if(t.id === currentTarget.id){
+          btn.classList.add('rightDot');
+          $('geoQuestion').innerHTML = `✅ Rétt! Þetta er <strong>${t.name}</strong>. +10 stig.`;
+          saveGeoScore(10);
+          challengeActive = false;
+        } else {
+          btn.classList.add('wrongDot');
+          $('geoQuestion').innerHTML = `❌ Þetta er ${t.name}. Reyndu aftur að finna <strong>${currentTarget.name}</strong>.`;
+          saveGeoScore(0);
+        }
+      }
+      showInfo(t);
+    }
+    function showInfo(t){
+      const km = distanceKm(ICELAND, t);
+      $('mapInfo').className = 'mapInfoCard';
+      $('mapInfo').innerHTML = `
+        <img src="${t.flag}" alt="Fáni ${t.name}">
+        <h2>${t.name}</h2>
+        <div class="mapFacts">
+          <span><b>Riðill</b>${t.group}</span>
+          <span><b>Höfuðborg</b>${t.capital}</span>
+          <span><b>Heimsálfa/svæði</b>${t.continent}</span>
+          <span><b>Frá Íslandi</b>um ${km.toLocaleString('is-IS')} km</span>
+          <span><b>Íbúafjöldi</b>${t.population}</span>
+          <span><b>HM-saga</b>${t.wcBest}</span>
+        </div>
+        <p class="smallNote"><strong>Verkefni:</strong> Finndu eina leið til að ferðast frá Íslandi til ${t.name} og skrifaðu hvaða lönd eða haf þú ferð yfir.</p>
+      `;
+    }
+    function newChallenge(){
+      currentTarget = teams[Math.floor(Math.random()*teams.length)];
+      challengeActive = true;
+      document.querySelectorAll('.countryDot').forEach(d=>d.classList.remove('selected','wrongDot','rightDot'));
+      $('geoQuestion').innerHTML = `🌍 Finndu á kortinu: <strong>${currentTarget.name}</strong> <span class="geoHint">Riðill ${currentTarget.group} · ${continentBase(currentTarget.continent)}</span>`;
+    }
+    $('geoChallengeBtn').addEventListener('click', newChallenge);
+    $('newGeoQuestion').addEventListener('click', newChallenge);
+    $('resetGeoScore').addEventListener('click',()=>{ localStorage.removeItem(STORE); renderScore(); });
+    setupFilters(); renderDots(); renderScore();
+  </script>
+</body>
+</html>

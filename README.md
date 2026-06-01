@@ -139,3 +139,16 @@ git push
 ```
 
 Ekki bæta `data/live/*.json` við venjuleg commit. GitHub Actions sér um þær skrár.
+
+
+## v0.8 — Heimskort + landafræðiáskorun
+
+Ný síða: `heimskort.html`
+
+- Heimskort með punktum fyrir allar HM-þjóðir.
+- Smelltu á þjóð til að sjá fána, höfuðborg, riðil, heimsálfu og áætlaða fjarlægð frá Íslandi.
+- „Finndu landið“ áskorun með stigum í vafra.
+- Síur eftir heimsálfu/svæði og leit að þjóð.
+- Prentanleg landafræðiverkefni.
+
+Einnig er lagaður bakgrunnur í `leikjasalur.html` þannig að spurningar, svarmöguleikar og stigakassar séu læsilegir.
