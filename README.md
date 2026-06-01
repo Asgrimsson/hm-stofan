@@ -169,3 +169,20 @@ Einnig er lagaður bakgrunnur í `leikjasalur.html` þannig að spurningar, svar
 - Fréttastofa HM í `frettastofa.html`.
 - Nemendur geta skrifað frétt um leik, viðtal, greiningu eða HM-blað bekkjarins.
 - Drög vistast í vafra, hægt að prenta og sækja texta.
+
+
+## v0.9.1 — FIFA squad helper
+
+Ný síða: `leikmenn-admin.html`.
+
+Ferli fyrir leikmannalista:
+1. Opna FIFA squad announcements.
+2. Velja þjóð í `leikmenn-admin.html`.
+3. Líma inn leikmannalista.
+4. Smella á **Hreinsa og forskoða**.
+5. Smella á **Vista þjóð í vinnsluminni**.
+6. Smella á **Sækja players.json**.
+7. Setja skrána í `data/players.json`.
+8. Commit + push.
+
+Leikjasalur fékk einnig sterkari birtuskil í Fánaleiknum.

@@ -3,61 +3,169 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Setja inn leikmannalista · HM-stofan</title>
+  <title>FIFA squad helper · HM-stofan</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="adminBody">
+<body class="adminBody fifaHelperBody">
 <header class="subHero adminHero">
   <nav class="topbar">
-    <div class="brand"><span class="ball">⚽</span><span>Leikmannalistar</span></div>
+    <div class="brand"><span class="ball">👕</span><span>FIFA squad helper</span></div>
     <div class="navlinks">
       <a href="index.html">Forsíða</a><a href="leikmenn.html">Leikmenn</a><a href="kennarabord.html">Kennaraborð</a><a href="frettastofa.html">Fréttastofa</a>
     </div>
   </nav>
   <section class="heroContent compactHero">
-    <p class="eyebrow">v0.8.2 · Innsetningarhjálp</p>
-    <h1>Límdu inn leikmannalista og búðu til players.json</h1>
-    <p class="lead">Notaðu þessa síðu til að festa leikmannalista inni í vefnum. Þegar endanlegir hópar liggja fyrir má líma þá inn, forskoða og sækja tilbúna JSON-skrá.</p>
+    <p class="eyebrow">v0.9.1 · Leikmannalistar</p>
+    <h1>Límdu FIFA-hóp inn og festu leikmannalista í vefinn</h1>
+    <p class="lead">Opnaðu FIFA squad announcement, afritaðu leikmannalistann, límdu hann hér inn og sæktu tilbúna <strong>players.json</strong> skrá fyrir vefinn.</p>
+    <div class="buttonRow"><a class="primaryBtn linkBtn" target="_blank" rel="noopener" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/all-world-cup-squad-announcements">Opna FIFA squad announcements</a><a class="ghostBtn linkBtn" href="leikmenn.html">Skoða leikmenn</a></div>
   </section>
 </header>
 <main>
-  <section class="panel adminGridPanel">
+  <section class="panel adminGridPanel helperPanel">
     <div class="sectionHead"><div><p class="eyebrow">Skref 1</p><h2>Veldu þjóð og límdu inn lista</h2></div><button class="ghostBtn" id="loadExisting">Hlaða núverandi players.json</button></div>
     <div class="teacherGrid twoCol">
       <article>
         <label>Þjóð</label>
         <select id="teamSelect"></select>
-        <label>Leikmannalisti</label>
-        <textarea id="playerText" rows="13" placeholder="Dæmi:\n1, Alisson, Markvörður, Liverpool\n2, Danilo, Varnarmaður, Flamengo\n10, Neymar, Sóknarmaður, Santos"></textarea>
-        <div class="buttonRow"><button class="primaryBtn" id="previewBtn">Forskoða lista</button><button class="ghostBtn" id="clearBtn">Hreinsa reit</button></div>
-        <p class="hint">Styður kommur, semíkommur eða bandstrik. Dæmi: númer, nafn, staða, félag.</p>
+        <label>Heimild / FIFA-slóð</label>
+        <input id="sourceUrl" type="url" placeholder="https://www.fifa.com/.../squad-announcement...">
+        <label>Þjálfari / athugasemd</label>
+        <input id="coachInput" type="text" placeholder="T.d. Carlo Ancelotti">
+        <label>Leikmannalisti frá FIFA eða annarri opinberri heimild</label>
+        <textarea id="playerText" rows="16" placeholder="Límdu listann hér. Dæmi:
+Goalkeepers
+1 Alisson Liverpool
+12 Bento Al Nassr
+
+Defenders
+2 Danilo Flamengo
+3 Marquinhos Paris Saint-Germain
+
+Eða:
+1, Alisson, Goalkeeper, Liverpool"></textarea>
+        <div class="buttonRow"><button class="primaryBtn" id="previewBtn">Hreinsa og forskoða</button><button class="ghostBtn" id="clearBtn">Hreinsa reit</button></div>
+        <p class="hint">Hjálpin reynir að þekkja stöður á íslensku og ensku: Goalkeepers, Defenders, Midfielders, Forwards eða GK/DF/MF/FW.</p>
       </article>
       <article>
         <h3>Forskoðun</h3>
+        <div class="helperStats" id="helperStats"><span>0 leikmenn</span><span>0 markmenn</span><span>0 varnarmenn</span><span>0 miðjumenn</span><span>0 sóknarmenn</span></div>
         <div id="previewBox" class="playerPreviewBox">Enginn listi kominn.</div>
-        <div class="buttonRow"><button class="primaryBtn" id="saveTeamBtn">Vista þjóð í vinnsluminni</button><button class="ghostBtn" id="downloadBtn">Sækja players.json</button></div>
+        <div class="buttonRow"><button class="primaryBtn" id="saveTeamBtn">Vista þjóð í vinnsluminni</button><button class="ghostBtn" id="copyJsonBtn">Afrita JSON</button><button class="ghostBtn" id="downloadBtn">Sækja players.json</button></div>
         <p class="hint">Settu niðurhalaða skrá inn í <strong>data/players.json</strong> og commit-aðu hana með CMD.</p>
       </article>
     </div>
   </section>
-  <section class="panel">
-    <p class="eyebrow">Fljótleg leið</p><h2>CSV / Excel form</h2>
-    <p>Best er að setja einn leikmann í hverja línu:</p>
-    <pre class="codeBlock">1, Nafn leikmanns, Markvörður, Félag
-4, Nafn leikmanns, Varnarmaður, Félag
-8, Nafn leikmanns, Miðjumaður, Félag
-10, Nafn leikmanns, Sóknarmaður, Félag</pre>
+
+  <section class="panel teacherGrid twoCol">
+    <article>
+      <p class="eyebrow">Skref 2</p><h2>Hvernig afrita ég af FIFA?</h2>
+      <ol class="cleanList numberedList">
+        <li>Opnaðu FIFA squad announcement fyrir þjóðina.</li>
+        <li>Veldu textann með leikmönnum og afritaðu.</li>
+        <li>Límdu textann í reitinn hér að ofan.</li>
+        <li>Smelltu á <strong>Hreinsa og forskoða</strong>.</li>
+        <li>Ef listinn lítur rétt út: <strong>Vista þjóð í vinnsluminni</strong> og síðan <strong>Sækja players.json</strong>.</li>
+      </ol>
+    </article>
+    <article>
+      <p class="eyebrow">Snið sem virka vel</p><h2>Dæmi</h2>
+      <pre class="codeBlock">Goalkeepers
+1 Alisson Liverpool
+23 Ederson Manchester City
+
+Defenders
+2 Danilo Flamengo
+3 Marquinhos Paris Saint-Germain
+
+Midfielders
+5 Casemiro Manchester United
+
+Forwards
+10 Neymar Santos</pre>
+    </article>
   </section>
 </main>
-<footer><p>HM-stofan · Leikmannalistar með innsetningarhjálp</p></footer>
+<footer><p>HM-stofan · v0.9.1 FIFA squad helper</p></footer>
 <script>
-const $=id=>document.getElementById(id);let teams=[],playersData={teams:{}};
-async function loadJson(path,fallback){try{const r=await fetch(path+'?v='+Date.now());if(!r.ok)throw new Error();return await r.json()}catch(e){return fallback}}
-function splitLine(line){let parts=line.split(/[;,]/).map(x=>x.trim()).filter(Boolean);if(parts.length<3)parts=line.split(/\s+-\s+/).map(x=>x.trim()).filter(Boolean);return parts}
-function parsePlayers(text){return text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).map((line,i)=>{let p=splitLine(line);let number='',name='',position='',club='';if(/^\d+$/.test(p[0]||'')){number=p[0];name=p[1]||'';position=p[2]||'';club=p.slice(3).join(', ')}else{name=p[0]||'';position=p[1]||'';club=p[2]||'';number=(p[3]&&/^\d+$/.test(p[3]))?p[3]:''}return {number,name,position,club}}).filter(p=>p.name)}
-function renderPreview(list){$('previewBox').innerHTML=list.length?`<table class="dataTable"><thead><tr><th>#</th><th>Nafn</th><th>Staða</th><th>Félag</th></tr></thead><tbody>${list.map(p=>`<tr><td>${p.number||''}</td><td>${p.name}</td><td>${p.position||''}</td><td>${p.club||''}</td></tr>`).join('')}</tbody></table>`:'Enginn listi fannst.'}
+const $=id=>document.getElementById(id);let teams=[],playersData={teams:[]};let lastParsed=[];
+const POS_LABELS={GK:'Markmenn',DF:'Varnarmenn',MF:'Miðjumenn',FW:'Sóknarmenn'};
+const POSITION_WORDS={
+  GK:['goalkeeper','goalkeepers','markvörður','markmenn','markmadur','markverdir','gk'],
+  DF:['defender','defenders','varnarmaður','varnarmenn','varnarmadur','df','centre-back','center-back','full-back','left-back','right-back'],
+  MF:['midfielder','midfielders','miðjumaður','miðjumenn','midjumadur','mf','winger','wingers'],
+  FW:['forward','forwards','striker','strikers','sóknarmaður','sóknarmenn','soknarmadur','fw','attacker','attackers']
+};
+const CLUB_HINTS=['fc','cf','sc','afc','united','city','town','athletic','real','club','deportivo','inter','milan','juventus','bayern','borussia','psg','paris','saint-germain','arsenal','chelsea','liverpool','barcelona','madrid','flamengo','palmeiras','santos','benfica','porto','sporting','ajax','psv','feyenoord','al-nassr','al-hilal','monaco','marseille','lyon','dortmund','leverkusen'];
+async function loadJson(path,fallback){try{const r=await fetch(path+'?v='+Date.now());if(!r.ok)throw new Error(path);return await r.json()}catch(e){return fallback}}
+function normalizePlayersData(data){if(Array.isArray(data))return {teams:data}; if(data&&Array.isArray(data.teams))return data; return {teams:[]};}
+function teamId(t){return t.id||t.code||t.name;}
+function detectPositionLine(line){const n=line.toLowerCase().replace(/[:：]/g,'').trim(); for(const [code,words] of Object.entries(POSITION_WORDS)){if(words.includes(n))return code;} return null;}
+function normalizePosition(raw,current){if(!raw)return current||''; const r=raw.toLowerCase().trim(); for(const [code,words] of Object.entries(POSITION_WORDS)){if(words.some(w=>r===w||r.includes(w)))return code;} if(['g','goal','keeper'].includes(r))return 'GK'; return current||raw;}
+function cleanLine(line){return line.replace(/^[•·*\-–—]+\s*/,'').replace(/\s+/g,' ').replace(/\t/g,' ').trim();}
+function splitDelimited(line){let p=line.split(/[;,]/).map(x=>x.trim()).filter(Boolean); if(p.length<3)p=line.split(/\s+-\s+/).map(x=>x.trim()).filter(Boolean); return p;}
+function guessFromSpaces(line,currentPos){
+  let number='', rest=line;
+  const m=line.match(/^(\d{1,2})\s+(.+)$/); if(m){number=m[1]; rest=m[2].trim();}
+  const bits=rest.split(' ').filter(Boolean);
+  let pos=currentPos;
+  let posIndex=-1;
+  for(let i=0;i<bits.length;i++){const code=normalizePosition(bits[i],''); if(['GK','DF','MF','FW'].includes(code)){pos=code; posIndex=i; break;}}
+  if(posIndex>=0){
+    const before=bits.slice(0,posIndex).join(' '); const after=bits.slice(posIndex+1).join(' ');
+    return {number,name:before,position:pos,club:after};
+  }
+  let splitAt=-1;
+  for(let i=1;i<bits.length;i++){const joined=bits.slice(i).join(' ').toLowerCase(); if(CLUB_HINTS.some(h=>joined.includes(h))){splitAt=i; break;}}
+  if(splitAt<0 && bits.length>=4) splitAt=Math.min(2,bits.length-1);
+  const name=splitAt>0?bits.slice(0,splitAt).join(' '):rest;
+  const club=splitAt>0?bits.slice(splitAt).join(' '):'';
+  return {number,name,position:pos||'',club};
+}
+function parseLine(line,currentPos){
+  const del=splitDelimited(line);
+  let number='',name='',position='',club='';
+  if(del.length>=3){
+    if(/^\d{1,2}$/.test(del[0])){number=del[0];name=del[1]||'';position=normalizePosition(del[2],currentPos);club=del.slice(3).join(', ')}
+    else {name=del[0]||'';position=normalizePosition(del[1],currentPos);club=del[2]||'';number=/^\d{1,2}$/.test(del[3]||'')?del[3]:''}
+    return {number,name,position,club};
+  }
+  return guessFromSpaces(line,currentPos);
+}
+function parsePlayers(text){
+  let currentPos=''; const out=[]; const seen=new Set();
+  for(const raw of text.split(/\r?\n/)){
+    let line=cleanLine(raw); if(!line)continue;
+    if(/^squad|^players|^coach|^head coach|^manager|^fifa|^world cup|^share$/i.test(line))continue;
+    const posLine=detectPositionLine(line); if(posLine){currentPos=posLine; continue;}
+    if(/^(goalkeepers|defenders|midfielders|forwards)\s*$/i.test(line))continue;
+    let p=parseLine(line,currentPos); if(!p.name || p.name.length<2)continue;
+    p.name=p.name.replace(/^\d{1,2}\s+/,'').trim();
+    p.position=normalizePosition(p.position,currentPos);
+    const key=(p.name+'|'+(p.club||'')).toLowerCase(); if(seen.has(key))continue; seen.add(key);
+    out.push(p);
+  }
+  return out;
+}
+function renderStats(list){const counts={GK:0,DF:0,MF:0,FW:0}; list.forEach(p=>{if(counts[p.position]!=null)counts[p.position]++}); $('helperStats').innerHTML=`<span>${list.length} leikmenn</span><span>${counts.GK} markmenn</span><span>${counts.DF} varnarmenn</span><span>${counts.MF} miðjumenn</span><span>${counts.FW} sóknarmenn</span>`;}
+function renderPreview(list){lastParsed=list;renderStats(list);$('previewBox').innerHTML=list.length?`<table class="dataTable"><thead><tr><th>#</th><th>Nafn</th><th>Staða</th><th>Félag</th></tr></thead><tbody>${list.map(p=>`<tr><td>${p.number||''}</td><td contenteditable="true">${p.name}</td><td>${POS_LABELS[p.position]||p.position||''}</td><td contenteditable="true">${p.club||''}</td></tr>`).join('')}</tbody></table>`:'Enginn listi fannst.'}
 function currentKey(){return $('teamSelect').value}
-async function init(){teams=await loadJson('data/teams.json',[]);playersData=await loadJson('data/players.json',{teams:{}});$('teamSelect').innerHTML=teams.map(t=>`<option value="${t.id||t.code||t.name}">${t.flag||''} ${t.name}</option>`).join('');$('previewBtn').onclick=()=>renderPreview(parsePlayers($('playerText').value));$('clearBtn').onclick=()=>{$('playerText').value='';renderPreview([])};$('saveTeamBtn').onclick=()=>{const list=parsePlayers($('playerText').value);playersData.teams[currentKey()]={updatedAt:new Date().toISOString(),players:list};renderPreview(list);alert('Listi vistaður í vinnsluminni. Mundu að sækja players.json.');};$('downloadBtn').onclick=()=>{const blob=new Blob([JSON.stringify(playersData,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='players.json';a.click();};$('loadExisting').onclick=async()=>{playersData=await loadJson('data/players.json',{teams:{}});alert('Núverandi players.json hlaðið.');};$('teamSelect').onchange=()=>{const data=playersData.teams[currentKey()];if(data?.players){$('playerText').value=data.players.map(p=>[p.number,p.name,p.position,p.club].filter(Boolean).join(', ')).join('\n');renderPreview(data.players)}}}
+function findRoster(id){return playersData.teams.find(r=>r.id===id)}
+function upsertRoster(roster){const i=playersData.teams.findIndex(r=>r.id===roster.id); if(i>=0)playersData.teams[i]=roster; else playersData.teams.push(roster);}
+function currentTeam(){return teams.find(t=>teamId(t)===currentKey())||{};}
+function downloadJson(){const blob=new Blob([JSON.stringify(playersData,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='players.json';a.click();}
+function copyJson(){navigator.clipboard?.writeText(JSON.stringify(playersData,null,2)); alert('JSON afritað á klemmuspjald.');}
+async function init(){
+  teams=await loadJson('data/teams.json',[]); playersData=normalizePlayersData(await loadJson('data/players.json',{teams:[]}));
+  $('teamSelect').innerHTML=teams.map(t=>`<option value="${teamId(t)}">${t.flag||''} ${t.name}</option>`).join('');
+  $('previewBtn').onclick=()=>renderPreview(parsePlayers($('playerText').value));
+  $('clearBtn').onclick=()=>{$('playerText').value='';renderPreview([])};
+  $('saveTeamBtn').onclick=()=>{const team=currentTeam();const list=parsePlayers($('playerText').value);const roster={id:teamId(team),name:team.name,english:team.english,group:team.group,flag:team.flag,status:list.length?'skráður hópur':'bíður staðfestingar',coach:$('coachInput').value.trim(),source:$('sourceUrl').value.trim()||'FIFA / opinber heimild límd inn handvirkt',updatedAt:new Date().toISOString(),players:list};upsertRoster(roster);renderPreview(list);alert('Listi vistaður í vinnsluminni. Nú má sækja players.json.');};
+  $('downloadBtn').onclick=downloadJson; $('copyJsonBtn').onclick=copyJson;
+  $('loadExisting').onclick=async()=>{playersData=normalizePlayersData(await loadJson('data/players.json',{teams:[]}));alert('Núverandi players.json hlaðið.');};
+  $('teamSelect').onchange=()=>{const data=findRoster(currentKey());if(data){$('sourceUrl').value=data.source&&data.source.startsWith('http')?data.source:'';$('coachInput').value=data.coach||'';$('playerText').value=(data.players||[]).map(p=>[p.number,p.name,POS_LABELS[p.position]||p.position,p.club].filter(Boolean).join(', ')).join('\n');renderPreview(data.players||[])}else{$('sourceUrl').value='';$('coachInput').value='';$('playerText').value='';renderPreview([])}};
+  $('teamSelect').dispatchEvent(new Event('change'));
+}
 init();
 </script>
 </body></html>

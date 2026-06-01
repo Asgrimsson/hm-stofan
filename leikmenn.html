@@ -19,9 +19,9 @@
       </div>
     </nav>
     <section class="heroContent compactHero">
-      <p class="eyebrow">v0.8.1 · Leikmannalistar</p>
+      <p class="eyebrow">v0.9.1 · Leikmannalistar</p>
       <h1>Leikmannalistar liðanna</h1>
-      <p class="lead">Veldu lið, skoðaðu hópinn og prentaðu leikmannablað. Síðan er tilbúin fyrir opinbera leikmannalista þegar þeir eru staðfestir.</p>
+      <p class="lead">Veldu lið, skoðaðu hópinn og prentaðu leikmannablað. Síðan les leikmannalista úr data/players.json og tengist FIFA squad helper innsetningarferlinu.</p>
     </section>
   </header>
 
@@ -51,7 +51,7 @@
   </main>
 
   <footer>
-    <p>HM-stofan v0.8.1 · Leikmannalistar · Prentvæn liðablöð</p>
+    <p>HM-stofan v0.9.1 · Leikmannalistar · Prentvæn liðablöð</p>
   </footer>
 
   <script>
@@ -67,7 +67,7 @@
     }
     async function init(){
       teams = await loadJson('data/teams.json', []);
-      rosters = await loadJson('data/players.json', []);
+      const rawPlayers = await loadJson('data/players.json', []); rosters = Array.isArray(rawPlayers) ? rawPlayers : (rawPlayers.teams || []);
       setupGroups(); renderTeamList();
       $('playerSearch').addEventListener('input', renderTeamList);
       $('playerGroup').addEventListener('change', renderTeamList);
@@ -114,9 +114,9 @@
           <span><b>HM-saga</b>${t.wcBest}</span>
           <span><b>Skráðir leikmenn</b>${players.length}</span>
         </div>
-        <div class="playerActions buttonRow"><button class="primaryBtn" type="button" onclick="window.print()">Prenta liðablað</button><a class="ghostBtn linkBtn" href="kennarabord.html">Kennaraborð</a></div>
+        <div class="playerActions buttonRow"><button class="primaryBtn" type="button" onclick="window.print()">Prenta liðablað</button><a class="ghostBtn linkBtn" href="leikmenn-admin.html">Setja inn hóp</a><a class="ghostBtn linkBtn" href="kennarabord.html">Kennaraborð</a></div>
         ${playerHtml}
-        <p class="playersNote">Athugið: leikmannahópar eru mjög tímanæmir. Notið opinberar heimildir þegar leikmannalistar eru settir inn.</p>`;
+        <p class="playersNote">Athugið: leikmannahópar eru mjög tímanæmir. Notið opinberar heimildir þegar leikmannalistar eru settir inn.</p>${r.source ? `<p class="playersNote"><strong>Heimild:</strong> ${String(r.source).startsWith('http') ? `<a href="${r.source}" target="_blank" rel="noopener">${r.source}</a>` : r.source}</p>` : ''}`;
     }
     init();
   </script>
