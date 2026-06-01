@@ -159,3 +159,13 @@ Einnig er lagaður bakgrunnur í `leikjasalur.html` þannig að spurningar, svar
 - Lagað heimskort: kortaleiðangur færist neðar og löndum er dreift betur svo fánar klístrist síður saman.
 - Bætt við `leikmenn.html` fyrir leikmannalista liðanna.
 - Bætt við `data/players.json` sem er tilbúin gagnaskrá fyrir opinbera leikmannalista.
+
+
+## v0.8.2
+- Leikmannalistar með innsetningarhjálp í `leikmenn-admin.html`.
+- Bættur bakgrunnur og læsileiki í Fánaleik og Leikjasal.
+
+## v0.9
+- Fréttastofa HM í `frettastofa.html`.
+- Nemendur geta skrifað frétt um leik, viðtal, greiningu eða HM-blað bekkjarins.
+- Drög vistast í vafra, hægt að prenta og sækja texta.

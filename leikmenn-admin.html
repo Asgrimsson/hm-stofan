@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Setja inn leikmannalista · HM-stofan</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="adminBody">
+<header class="subHero adminHero">
+  <nav class="topbar">
+    <div class="brand"><span class="ball">⚽</span><span>Leikmannalistar</span></div>
+    <div class="navlinks">
+      <a href="index.html">Forsíða</a><a href="leikmenn.html">Leikmenn</a><a href="kennarabord.html">Kennaraborð</a><a href="frettastofa.html">Fréttastofa</a>
+    </div>
+  </nav>
+  <section class="heroContent compactHero">
+    <p class="eyebrow">v0.8.2 · Innsetningarhjálp</p>
+    <h1>Límdu inn leikmannalista og búðu til players.json</h1>
+    <p class="lead">Notaðu þessa síðu til að festa leikmannalista inni í vefnum. Þegar endanlegir hópar liggja fyrir má líma þá inn, forskoða og sækja tilbúna JSON-skrá.</p>
+  </section>
+</header>
+<main>
+  <section class="panel adminGridPanel">
+    <div class="sectionHead"><div><p class="eyebrow">Skref 1</p><h2>Veldu þjóð og límdu inn lista</h2></div><button class="ghostBtn" id="loadExisting">Hlaða núverandi players.json</button></div>
+    <div class="teacherGrid twoCol">
+      <article>
+        <label>Þjóð</label>
+        <select id="teamSelect"></select>
+        <label>Leikmannalisti</label>
+        <textarea id="playerText" rows="13" placeholder="Dæmi:\n1, Alisson, Markvörður, Liverpool\n2, Danilo, Varnarmaður, Flamengo\n10, Neymar, Sóknarmaður, Santos"></textarea>
+        <div class="buttonRow"><button class="primaryBtn" id="previewBtn">Forskoða lista</button><button class="ghostBtn" id="clearBtn">Hreinsa reit</button></div>
+        <p class="hint">Styður kommur, semíkommur eða bandstrik. Dæmi: númer, nafn, staða, félag.</p>
+      </article>
+      <article>
+        <h3>Forskoðun</h3>
+        <div id="previewBox" class="playerPreviewBox">Enginn listi kominn.</div>
+        <div class="buttonRow"><button class="primaryBtn" id="saveTeamBtn">Vista þjóð í vinnsluminni</button><button class="ghostBtn" id="downloadBtn">Sækja players.json</button></div>
+        <p class="hint">Settu niðurhalaða skrá inn í <strong>data/players.json</strong> og commit-aðu hana með CMD.</p>
+      </article>
+    </div>
+  </section>
+  <section class="panel">
+    <p class="eyebrow">Fljótleg leið</p><h2>CSV / Excel form</h2>
+    <p>Best er að setja einn leikmann í hverja línu:</p>
+    <pre class="codeBlock">1, Nafn leikmanns, Markvörður, Félag
+4, Nafn leikmanns, Varnarmaður, Félag
+8, Nafn leikmanns, Miðjumaður, Félag
+10, Nafn leikmanns, Sóknarmaður, Félag</pre>
+  </section>
+</main>
+<footer><p>HM-stofan · Leikmannalistar með innsetningarhjálp</p></footer>
+<script>
+const $=id=>document.getElementById(id);let teams=[],playersData={teams:{}};
+async function loadJson(path,fallback){try{const r=await fetch(path+'?v='+Date.now());if(!r.ok)throw new Error();return await r.json()}catch(e){return fallback}}
+function splitLine(line){let parts=line.split(/[;,]/).map(x=>x.trim()).filter(Boolean);if(parts.length<3)parts=line.split(/\s+-\s+/).map(x=>x.trim()).filter(Boolean);return parts}
+function parsePlayers(text){return text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).map((line,i)=>{let p=splitLine(line);let number='',name='',position='',club='';if(/^\d+$/.test(p[0]||'')){number=p[0];name=p[1]||'';position=p[2]||'';club=p.slice(3).join(', ')}else{name=p[0]||'';position=p[1]||'';club=p[2]||'';number=(p[3]&&/^\d+$/.test(p[3]))?p[3]:''}return {number,name,position,club}}).filter(p=>p.name)}
+function renderPreview(list){$('previewBox').innerHTML=list.length?`<table class="dataTable"><thead><tr><th>#</th><th>Nafn</th><th>Staða</th><th>Félag</th></tr></thead><tbody>${list.map(p=>`<tr><td>${p.number||''}</td><td>${p.name}</td><td>${p.position||''}</td><td>${p.club||''}</td></tr>`).join('')}</tbody></table>`:'Enginn listi fannst.'}
+function currentKey(){return $('teamSelect').value}
+async function init(){teams=await loadJson('data/teams.json',[]);playersData=await loadJson('data/players.json',{teams:{}});$('teamSelect').innerHTML=teams.map(t=>`<option value="${t.id||t.code||t.name}">${t.flag||''} ${t.name}</option>`).join('');$('previewBtn').onclick=()=>renderPreview(parsePlayers($('playerText').value));$('clearBtn').onclick=()=>{$('playerText').value='';renderPreview([])};$('saveTeamBtn').onclick=()=>{const list=parsePlayers($('playerText').value);playersData.teams[currentKey()]={updatedAt:new Date().toISOString(),players:list};renderPreview(list);alert('Listi vistaður í vinnsluminni. Mundu að sækja players.json.');};$('downloadBtn').onclick=()=>{const blob=new Blob([JSON.stringify(playersData,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='players.json';a.click();};$('loadExisting').onclick=async()=>{playersData=await loadJson('data/players.json',{teams:{}});alert('Núverandi players.json hlaðið.');};$('teamSelect').onchange=()=>{const data=playersData.teams[currentKey()];if(data?.players){$('playerText').value=data.players.map(p=>[p.number,p.name,p.position,p.club].filter(Boolean).join(', ')).join('\n');renderPreview(data.players)}}}
+init();
+</script>
+</body></html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fréttastofa HM · HM-stofan 2026</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="newsroomBody">
+<header class="subHero newsroomHero">
+  <nav class="topbar">
+    <div class="brand"><span class="ball">⚽</span><span>Fréttastofa HM</span></div>
+    <div class="navlinks">
+      <a href="index.html">Forsíða</a><a href="verkefni.html">Verkefni</a><a href="leikjasalur.html">Leikjasalur</a><a href="heimskort.html">Heimskort</a><a href="kennarabord.html">Kennaraborð</a>
+    </div>
+  </nav>
+  <section class="heroContent compactHero">
+    <p class="eyebrow">v0.9 · Skapandi skrif og miðlalæsi</p>
+    <h1>Skrifaðu frétt, viðtal eða HM-blað bekkjarins</h1>
+    <p class="lead">Nemendur vinna eins og íþróttafréttamenn: velja leik eða þjóð, skrifa fyrirsögn, frétt, viðtal og prenta afurðina.</p>
+    <div class="heroStats"><div><strong>📰</strong><span>frétt</span></div><div><strong>🎙️</strong><span>viðtal</span></div><div><strong>⭐</strong><span>mat</span></div><div><strong>🖨️</strong><span>prentun</span></div></div>
+  </section>
+</header>
+<main>
+  <section class="panel newsroomControls">
+    <div class="sectionHead"><div><p class="eyebrow">Veldu verkefni</p><h2>Fréttaritari dagsins</h2></div><div class="buttonRow"><button id="randomStory" class="ghostBtn">Velja handahófsverkefni</button><button id="printStory" class="primaryBtn">Prenta frétt</button></div></div>
+    <div class="teacherGrid threeCol">
+      <article><label>Verkefnagerð</label><select id="storyType"><option value="match">Frétt um leik</option><option value="interview">Viðtal</option><option value="analysis">Greining / álitsgrein</option><option value="paper">HM-blað bekkjarins</option></select></article>
+      <article><label>Veldu leik</label><select id="matchSelect"></select></article>
+      <article><label>Veldu þjóð</label><select id="teamSelect"></select></article>
+    </div>
+  </section>
+
+  <section class="panel newsroomWriter">
+    <div class="writerGrid">
+      <form class="newsForm" id="newsForm">
+        <label>Fyrirsögn</label><input id="headline" placeholder="Dæmi: Japan byrjar HM af krafti">
+        <label>Inngangur / aðalatriði</label><textarea id="lead" rows="3" placeholder="Hver? Hvað? Hvenær? Hvar? Af hverju skiptir þetta máli?"></textarea>
+        <label>Fréttatexti</label><textarea id="bodyText" rows="8" placeholder="Skrifaðu fréttina hér. Notaðu staðreyndir, úrslit, tilvitnun og áhrif á riðilinn."></textarea>
+        <label>Tilvitnun</label><input id="quote" placeholder="„Við gáfum allt í þetta,“ sagði fyrirliðinn.">
+        <label>Maður leiksins / lykilpersóna</label><input id="person" placeholder="Nafn leikmanns eða þjálfara">
+        <div class="buttonRow"><button type="button" id="saveDraft" class="primaryBtn">Vista í vafra</button><button type="button" id="clearDraft" class="dangerBtn">Hreinsa</button><button type="button" id="downloadTxt" class="ghostBtn">Sækja texta</button></div>
+      </form>
+      <aside class="newsPreview printableStory" id="storyPreview">
+        <p class="eyebrow">Forskoðun</p><h2>Fyrirsögn birtist hér</h2><p class="newsMeta">HM-stofan · Fréttaritari</p><p class="leadPreview">Inngangur birtist hér.</p><p>Fréttatexti birtist hér.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="panel promptsPanel">
+    <p class="eyebrow">Hjálp fyrir nemendur</p><h2>Gátlisti fréttamanns</h2>
+    <div class="teacherGrid">
+      <article><h3>5 W spurningar</h3><p>Hver spilaði? Hvað gerðist? Hvenær? Hvar? Af hverju skipti leikurinn máli?</p></article>
+      <article><h3>Góð frétt</h3><p>Byrjar á mikilvægasta atriðinu, notar staðreyndir og hefur eina stutta tilvitnun.</p></article>
+      <article><h3>Viðtal</h3><p>Spyrðu opinna spurninga: Hvernig leið þér? Hvað gekk vel? Hvað þarf að bæta?</p></article>
+    </div>
+  </section>
+</main>
+<footer><p>HM-stofan v0.9 · Fréttastofa HM</p></footer>
+<script>
+const $=id=>document.getElementById(id);let teams=[],matches=[];const KEY='hmstofa_frettastofa_v09';
+async function getJson(p,f){try{const r=await fetch(p+'?v='+Date.now());if(!r.ok)throw new Error();return await r.json()}catch(e){return f}}
+function matchName(m){return `${m.home||m.homeTeam||'Heimalið'} – ${m.away||m.awayTeam||'Útilið'}${m.date?' · '+m.date:''}`}
+function updatePreview(){const h=$('headline').value||'Fyrirsögn birtist hér';const l=$('lead').value||'Inngangur birtist hér.';const b=$('bodyText').value||'Fréttatexti birtist hér.';const q=$('quote').value;const p=$('person').value;const type=$('storyType').selectedOptions[0]?.textContent||'Frétt';$('storyPreview').innerHTML=`<p class="eyebrow">${type}</p><h2>${h}</h2><p class="newsMeta">HM-stofan · ${new Date().toLocaleDateString('is-IS')}</p><p class="leadPreview">${l}</p><p>${b.replace(/\n/g,'</p><p>')}</p>${q?`<blockquote>${q}</blockquote>`:''}${p?`<p><strong>Lykilpersóna:</strong> ${p}</p>`:''}`}
+function save(){const data={storyType:$('storyType').value,match:$('matchSelect').value,team:$('teamSelect').value,headline:$('headline').value,lead:$('lead').value,bodyText:$('bodyText').value,quote:$('quote').value,person:$('person').value};localStorage.setItem(KEY,JSON.stringify(data));alert('Drög vistuð í þessum vafra.');}
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||'{}');for(const k of ['storyType','headline','lead','bodyText','quote','person'])if($(k)&&d[k])$(k).value=d[k];}catch{} updatePreview();}
+function randomize(){const t=teams[Math.floor(Math.random()*teams.length)];const m=matches[Math.floor(Math.random()*matches.length)];if(t)$('teamSelect').value=t.id||t.code||t.name;if(m)$('matchSelect').value=String(matches.indexOf(m));const options=['Óvænt úrslit hrista upp í riðlinum','Fyrirliðinn stígur fram á stóru sviði','Ung stjarna vekur athygli á HM','Stuðningsmenn skapa magnaða stemningu'];$('headline').value=options[Math.floor(Math.random()*options.length)];$('lead').value='Skrifaðu 2–3 setningar um helstu tíðindi og hvers vegna þau skipta máli.';updatePreview();}
+async function init(){teams=await getJson('data/teams.json',[]);matches=await getJson('data/matches.json',[]);$('teamSelect').innerHTML=teams.map(t=>`<option value="${t.id||t.code||t.name}">${t.flag||''} ${t.name}</option>`).join('');$('matchSelect').innerHTML=matches.map((m,i)=>`<option value="${i}">${matchName(m)}</option>`).join('');['headline','lead','bodyText','quote','person','storyType'].forEach(id=>$(id).addEventListener('input',updatePreview));$('saveDraft').onclick=save;$('clearDraft').onclick=()=>{localStorage.removeItem(KEY);document.querySelectorAll('input,textarea').forEach(x=>x.value='');updatePreview()};$('printStory').onclick=()=>window.print();$('randomStory').onclick=randomize;$('downloadTxt').onclick=()=>{const txt=$('storyPreview').innerText;const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='hm-frett.txt';a.click()};load();}
+init();
+</script>
+</body></html>
