@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HM-stofan 2026</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <nav class="topbar">
+      <div class="brand"><span class="ball">⚽</span><span>HM-stofan 2026</span></div>
+      <div class="navlinks">
+        <a href="#teams">Þjóðir</a>
+        <a href="#groups">Riðlar</a>
+        <a href="#history">Saga HM</a>
+        <a href="#teacher">Kennari</a>
+      </div>
+    </nav>
+    <section class="heroContent">
+      <p class="eyebrow">Kennsluvefur fyrir HM í knattspyrnu</p>
+      <h1>Fánar, þjóðir, riðlar og saga heimsmeistaranna</h1>
+      <p class="lead">Smelltu á fána til að skoða landið, lærðu um þátttökuþjóðirnar og fylgstu með riðlum og leikjadagskrá.</p>
+      <div class="heroStats">
+        <div><strong>48</strong><span>þjóðir</span></div>
+        <div><strong>12</strong><span>riðlar</span></div>
+        <div><strong>72</strong><span>riðlaleikir</span></div>
+        <div><strong>1930–2026</strong><span>HM saga</span></div>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="panel introGrid">
+      <div>
+        <h2>Hvernig nota nemendur vefinn?</h2>
+        <p>Nemendur velja þjóð, lesa þjóðaspjald, skoða riðilinn og bera landið saman við Ísland. Vefurinn hentar vel í landafræði, samfélagsfræði, stærðfræði, íslensku og ensku.</p>
+      </div>
+      <div class="miniCard">
+        <h3>Verkefnahugmynd</h3>
+        <p>Veldu þjóð og búðu til 5 staðreyndir, 3 samanburði við Ísland og eina spá fyrir riðilinn.</p>
+      </div>
+      <div class="miniCard accent">
+        <h3>Næsta útgáfa</h3>
+        <p>v0.2 styður Python-bakenda sem getur sótt úrslit sjálfkrafa og skilað stigatöflum sem JSON.</p>
+      </div>
+    </section>
+
+    <section id="teams" class="panel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Þátttökuþjóðir</p>
+          <h2>Veldu fána</h2>
+        </div>
+        <div class="filters">
+          <input id="search" type="search" placeholder="Leita að þjóð...">
+          <select id="groupFilter"><option value="all">Allir riðlar</option></select>
+          <select id="continentFilter"><option value="all">Allar heimsálfur</option></select>
+        </div>
+      </div>
+      <div id="teamGrid" class="teamGrid"></div>
+    </section>
+
+    <section id="groups" class="panel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Riðlar og stigatöflur</p>
+          <h2>Staðan í riðlum</h2>
+        </div>
+        <p class="hint">Vefurinn reynir fyrst að sækja lifandi gögn úr Python API. Ef API er ekki tengt notar hann <code>data/matches.json</code> sem varaútgáfu.</p>
+      </div>
+      <div id="groupsWrap" class="groupsWrap"></div>
+    </section>
+
+    <section id="schedule" class="panel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Leikjadagskrá</p>
+          <h2>Riðlakeppnin</h2>
+        </div>
+      </div>
+      <div id="matchList" class="matchList"></div>
+    </section>
+
+    <section id="history" class="panel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Saga HM</p>
+          <h2>Hvaða þjóðir hafa orðið heimsmeistarar?</h2>
+        </div>
+      </div>
+      <div id="winnerStats" class="winnerStats"></div>
+      <div id="historyTimeline" class="timeline"></div>
+    </section>
+
+    <section id="teacher" class="panel teacher">
+      <p class="eyebrow">Kennarahamur</p>
+      <h2>Leið fyrir þig að vinna með vefinn</h2>
+      <div class="teacherGrid">
+        <article>
+          <h3>1. Prófaðu vefinn</h3>
+          <p>Opnaðu index.html eða keyrðu <code>python -m http.server 8000</code>. Smelltu á fána og skoðaðu þjóðaspjöld.</p>
+        </article>
+        <article>
+          <h3>2. Breyttu gögnum</h3>
+          <p>Þú getur keyrt Python API fyrir sjálfvirk úrslit. Ef API er ekki tiltækt má samt laga gögn í <code>data/*.json</code>.</p>
+        </article>
+        <article>
+          <h3>3. Settu á Netlify</h3>
+          <p>Dragðu möppuna eða zip-skrána inn á Netlify Drop og þú færð slóð sem má setja í Google Sites.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="teamModal" class="modal">
+    <button id="closeModal" class="close" aria-label="Loka">×</button>
+    <div id="modalContent"></div>
+  </dialog>
+
+  <footer>
+    <p>HM-stofan v0.2 · Kennsluvefur · Python API stuðningur · JSON fallback · Netlify-ready</p>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+name: Uppfæra HM gögn
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Keyrir á 30 mínútna fresti. GitHub notar UTC tíma.
+    - cron: "*/30 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Sækja kóða
+        uses: actions/checkout@v4
+
+      - name: Setja upp Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Keyra gagnauppfærslu
+        env:
+          PROVIDER: github-actions-local
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+        run: python scripts/update_worldcup_data.py
+
+      - name: Vista uppfærð live gögn
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto update HM live data"
+          file_pattern: data/live/*.json
