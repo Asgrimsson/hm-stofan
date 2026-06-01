@@ -30,3 +30,57 @@ main{margin:0 auto 0;}
 .guideActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
 @media(max-width:1050px){.guideSteps{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:700px){.guideSteps{grid-template-columns:1fr;}main{padding-left:14px;padding-right:14px}.hero h1{font-size:clamp(2.15rem,13vw,4rem)}.heroStats{grid-template-columns:1fr 1fr}.studentGuide{margin-top:16px;}}
+
+/* HM-stofan v0.5 Verkefnamiðstöð */
+.taskHero .heroContent{padding-bottom:80px;}
+.projectPreview .teacherGrid article{min-height:120px;}
+.taskPage main{margin-top:-38px;}
+.taskControlPanel{position:relative; z-index:2;}
+.taskChooser{display:grid; grid-template-columns:repeat(4, minmax(160px,1fr)); gap:14px; margin-top:18px;}
+.taskChooser label{display:flex; flex-direction:column; gap:8px; color:#dbeafe; font-weight:800;}
+.taskChooser select{background:rgba(255,255,255,.08); color:#fff; border:1px solid rgba(255,255,255,.2); border-radius:14px; padding:12px; min-height:46px;}
+.taskChooser option{color:#0f172a;}
+.taskLayout{display:grid; grid-template-columns:minmax(0, 1fr) 330px; gap:22px; max-width:1200px; margin:0 auto 36px; padding:0 18px;}
+.printableTask{margin:0; background:rgba(255,255,255,.93); color:#0f172a;}
+.printableTask h2,.printableTask h3{color:#0f172a;}
+.printableTask .eyebrow{color:#1d4ed8;}
+.taskSheetHead{display:flex; justify-content:space-between; gap:18px; align-items:flex-start; border-bottom:2px solid rgba(15,23,42,.12); padding-bottom:18px; margin-bottom:20px;}
+.nameBox{min-width:220px; display:grid; gap:10px; border:1px solid rgba(15,23,42,.2); border-radius:16px; padding:14px; font-weight:800;}
+.taskCountryHero,.taskMatchHero,.posterBox{display:flex; gap:18px; align-items:center; background:#eff6ff; border:1px solid #bfdbfe; border-radius:18px; padding:18px; margin:14px 0 18px;}
+.taskCountryHero img,.posterBox img{width:130px; max-height:90px; object-fit:contain; border-radius:10px; background:white; padding:8px;}
+.taskMatchHero{justify-content:space-between; font-size:1.15rem; font-weight:900;}
+.taskMatchHero span{display:flex; align-items:center; gap:10px;}
+.taskMatchHero img{width:50px; height:34px; object-fit:cover; border-radius:6px;}
+.taskFacts{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:14px 0 22px;}
+.taskFacts span{background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:12px;}
+.taskFacts b{display:block; font-size:.78rem; text-transform:uppercase; color:#475569; margin-bottom:4px;}
+.taskList{line-height:1.7; padding-left:22px;}
+.writeLines{display:grid; gap:16px; margin:10px 0 20px;}
+.writeLines span{border-bottom:1.5px solid #94a3b8; min-height:22px;}
+.writeLabel{display:block; font-weight:900; margin-top:16px; color:#334155;}
+.compareGrid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:12px 0 20px;}
+.compareTeam{border:1px solid #dbeafe; border-radius:18px; padding:16px; background:#f8fbff;}
+.compareTeam>img{width:90px; height:58px; object-fit:cover; border-radius:8px;}
+.compareTeam .taskFacts{grid-template-columns:1fr;}
+.researchCards{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin:16px 0;}
+.researchCards article{background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:16px;}
+.posterBox h2{font-size:2.4rem; margin:.2rem 0;}
+.posterCanvas{min-height:260px; border:3px dashed #93c5fd; border-radius:22px; display:grid; place-items:center; color:#475569; font-weight:900; background:linear-gradient(135deg,#eff6ff,#f8fafc); margin-top:18px;}
+.teacherTips{margin:0; position:sticky; top:16px; align-self:start;}
+.fullBtn{width:100%; justify-content:center; margin:8px 0; text-align:center;}
+.teacherTips hr{border:0; border-top:1px solid rgba(255,255,255,.15); margin:18px 0;}
+@media (max-width:900px){
+  .taskChooser{grid-template-columns:1fr;}
+  .taskLayout{grid-template-columns:1fr;}
+  .taskSheetHead,.taskCountryHero,.posterBox{flex-direction:column; align-items:flex-start;}
+  .taskFacts,.compareGrid,.researchCards{grid-template-columns:1fr;}
+  .teacherTips{position:static;}
+}
+@media print{
+  body{background:white!important; color:#0f172a!important;}
+  .hero,.topbar,.taskControlPanel,.teacherTips,footer{display:none!important;}
+  .taskLayout{display:block; padding:0; margin:0; max-width:none;}
+  .panel,.printableTask{box-shadow:none!important; border:0!important; margin:0!important; padding:0!important; background:white!important; color:#0f172a!important;}
+  .writeLines span{border-bottom:1px solid #111827;}
+  a{color:#111827!important; text-decoration:none;}
+}

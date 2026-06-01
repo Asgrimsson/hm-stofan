@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HM-stofan 2026 · Verkefnamiðstöð</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="taskPage">
+  <header class="hero taskHero">
+    <nav class="topbar">
+      <div class="brand"><span class="ball">⚽</span><span>HM-stofan 2026</span></div>
+      <div class="navlinks">
+        <a href="index.html">Forsíða</a>
+        <a href="index.html#teams">Þjóðir</a>
+        <a href="index.html#groups">Riðlar</a>
+        <a href="index.html#predictions">Spáleikur</a>
+        <a href="skjar.html" target="_blank" rel="noopener">Live skjár</a>
+      </div>
+    </nav>
+    <section class="heroContent">
+      <p class="eyebrow">HM-stofan v0.5</p>
+      <h1>Verkefnamiðstöð</h1>
+      <p class="lead">Veldu verkefni, safnaðu upplýsingum úr HM-stofunni og prentaðu út verkefnablað fyrir nemendur.</p>
+      <div class="heroStats">
+        <div><strong>5</strong><span>verkefnagerðir</span></div>
+        <div><strong>A4</strong><span>prentvænt</span></div>
+        <div><strong>48</strong><span>þjóðir</span></div>
+        <div><strong>Local</strong><span>vistun í vafra</span></div>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="panel taskControlPanel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Kennari velur</p>
+          <h2>Veldu verkefni</h2>
+        </div>
+        <div class="buttonRow">
+          <button class="ghostBtn" id="printTaskBtn" type="button">Prenta verkefnið</button>
+          <button class="ghostBtn" id="saveTaskBtn" type="button">Vista í vafra</button>
+          <button class="dangerBtn" id="clearTaskBtn" type="button">Hreinsa vinnusvæði</button>
+        </div>
+      </div>
+
+      <div class="taskChooser">
+        <label>Verkefnagerð
+          <select id="taskType">
+            <option value="country">Þjóðarspjald</option>
+            <option value="compare">Berðu saman tvær þjóðir</option>
+            <option value="news">Skrifaðu frétt um leik</option>
+            <option value="research">HM rannsókn</option>
+            <option value="poster">Stuðningsplakat</option>
+          </select>
+        </label>
+        <label>Þjóð A
+          <select id="teamA"></select>
+        </label>
+        <label>Þjóð B
+          <select id="teamB"></select>
+        </label>
+        <label>Leikur
+          <select id="matchPick"></select>
+        </label>
+      </div>
+    </section>
+
+    <section class="taskLayout">
+      <article class="panel printableTask" id="taskSheet">
+        <div id="taskContent">Hleð verkefni...</div>
+      </article>
+
+      <aside class="panel teacherTips">
+        <p class="eyebrow">Kennarahugmynd</p>
+        <h2>Hvernig má nota þetta?</h2>
+        <div id="teacherTipContent"></div>
+        <hr>
+        <h3>Fljótlegar leiðir</h3>
+        <button class="ghostBtn fullBtn" data-random="country" type="button">Velja handahófskennda þjóð</button>
+        <button class="ghostBtn fullBtn" data-random="compare" type="button">Handahófskenndur samanburður</button>
+        <button class="ghostBtn fullBtn" data-random="match" type="button">Handahófskenndur leikur</button>
+        <a class="primaryBtn linkBtn fullBtn" href="index.html#teams">Skoða fána og þjóðaspjöld</a>
+      </aside>
+    </section>
+  </main>
+
+  <footer>
+    <p>HM-stofan v0.5 · Verkefnamiðstöð · Þjóðarspjöld · Samanburður · Fréttaskrif · Rannsóknarverkefni</p>
+  </footer>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let teams = [], matches = [];
+const TASK_KEY = 'hm_stofan_v05_task_workspace';
+
+async function fetchJson(url){
+  const r = await fetch(url, {cache:'no-store'});
+  if(!r.ok) throw new Error(url);
+  return await r.json();
+}
+async function loadData(){
+  try{
+    const snap = await fetchJson('data/live/snapshot.json');
+    if(snap?.teams && snap?.matches){ teams = snap.teams; matches = snap.matches; return; }
+  }catch(e){}
+  teams = await fetchJson('data/teams.json');
+  matches = await fetchJson('data/matches.json');
+}
+function fmtDate(iso){
+  if(!iso) return 'Dagsetning kemur síðar';
+  const base = iso.includes('T') ? iso : iso + 'T12:00:00';
+  return new Date(base).toLocaleDateString('is-IS', {day:'numeric', month:'long', year:'numeric'});
+}
+function team(id){ return teams.find(t=>t.id===id) || teams[0] || {}; }
+function matchLabel(m){ return `${fmtDate(m.date)} · ${team(m.home).name} vs ${team(m.away).name} · Riðill ${m.group}`; }
+function selectedTeamA(){ return team($('teamA').value); }
+function selectedTeamB(){ return team($('teamB').value); }
+function selectedMatch(){ return matches[Number($('matchPick').value)] || matches[0] || {}; }
+function fillSelects(){
+  const opts = teams.map(t=>`<option value="${t.id}">${t.name} · Riðill ${t.group}</option>`).join('');
+  $('teamA').innerHTML = opts;
+  $('teamB').innerHTML = opts;
+  if(teams[1]) $('teamB').value = teams[1].id;
+  $('matchPick').innerHTML = matches.map((m,i)=>`<option value="${i}">${matchLabel(m)}</option>`).join('');
+}
+function factList(t){
+  return `<div class="taskFacts">
+    <span><b>Höfuðborg</b>${t.capital || '-'}</span>
+    <span><b>Íbúafjöldi</b>${t.population || '-'}</span>
+    <span><b>Heimsálfa</b>${t.continent || '-'}</span>
+    <span><b>Tungumál</b>${t.languages || '-'}</span>
+    <span><b>Gjaldmiðill</b>${t.currency || '-'}</span>
+    <span><b>Atvinnugreinar</b>${t.industries || '-'}</span>
+    <span><b>Besti HM-árangur</b>${t.wcBest || '-'}</span>
+  </div>`;
+}
+function lineBlock(lines=4){ return `<div class="writeLines">${Array.from({length:lines},()=>'<span></span>').join('')}</div>`; }
+function taskHeader(title, subtitle){
+  return `<div class="taskSheetHead"><div><p class="eyebrow">HM-stofan verkefni</p><h2>${title}</h2><p>${subtitle}</p></div><div class="nameBox"><span>Nafn:</span><span>Bekkur:</span></div></div>`;
+}
+function countryTask(){
+  const t = selectedTeamA();
+  return `${taskHeader('Þjóðarspjald: ' + t.name, 'Safnaðu staðreyndum og breyttu þeim í skýra kynningu.')}
+    <div class="taskCountryHero"><img src="${t.flag}" alt="Fáni ${t.name}"><div><h3>${t.name}</h3><p>${t.fact || ''}</p></div></div>
+    ${factList(t)}
+    <h3>Verkefni</h3>
+    <ol class="taskList">
+      <li>Skrifaðu 5 mikilvægar staðreyndir um ${t.name}.</li>
+      <li>Berðu ${t.name} saman við Ísland. Finndu 3 líkindi og 3 atriði sem eru ólík.</li>
+      <li>Hvernig hefur þjóðin staðið sig á HM?</li>
+      <li>Búðu til eina spurningu um landið fyrir bekkinn.</li>
+    </ol>
+    <h3>Svör og hugmyndir</h3>${lineBlock(6)}`;
+}
+function compareTask(){
+  const a = selectedTeamA(), b = selectedTeamB();
+  return `${taskHeader('Samanburður: ' + a.name + ' og ' + b.name, 'Skoðaðu hvað þjóðirnar eiga sameiginlegt og hvað er ólíkt.')}
+    <div class="compareGrid">
+      <div class="compareTeam"><img src="${a.flag}" alt=""><h3>${a.name}</h3>${factList(a)}</div>
+      <div class="compareTeam"><img src="${b.flag}" alt=""><h3>${b.name}</h3>${factList(b)}</div>
+    </div>
+    <h3>Samanburðarspurningar</h3>
+    <ol class="taskList">
+      <li>Hvor þjóðin er fjölmennari?</li>
+      <li>Hvaða tungumál eru töluð í löndunum?</li>
+      <li>Hvor þjóðin hefur náð betri árangri á HM?</li>
+      <li>Hvaða atvinnugreinar eru líkar? Hvaða atvinnugreinar eru ólíkar?</li>
+      <li>Hvaða þjóð myndir þú vilja kynna nánar og af hverju?</li>
+    </ol>${lineBlock(7)}`;
+}
+function newsTask(){
+  const m = selectedMatch(); const h = team(m.home), a = team(m.away);
+  const score = m.homeScore == null || m.awayScore == null ? 'Úrslit liggja ekki fyrir' : `${m.homeScore}–${m.awayScore}`;
+  return `${taskHeader('Fréttamaður HM', 'Skrifaðu íþróttafrétt um leikinn.')}
+    <div class="taskMatchHero"><span><img src="${h.flag}" alt="">${h.name}</span><b>${score}</b><span><img src="${a.flag}" alt="">${a.name}</span></div>
+    <p><strong>Dagsetning:</strong> ${fmtDate(m.date)} · <strong>Riðill:</strong> ${m.group} · <strong>Völlur:</strong> ${m.venue || '-'}</p>
+    <h3>Fréttin þín</h3>
+    <label class="writeLabel">Fyrirsögn</label>${lineBlock(1)}
+    <label class="writeLabel">Inngangur: Hvað gerðist?</label>${lineBlock(3)}
+    <label class="writeLabel">Meginmál: Hverjir voru lykilmenn, mörk eða vendipunktar?</label>${lineBlock(5)}
+    <label class="writeLabel">Niðurlag: Hvað þýðir þetta fyrir riðilinn?</label>${lineBlock(3)}`;
+}
+function researchTask(){
+  return `${taskHeader('HM rannsókn', 'Notaðu gögnin í HM-stofunni til að svara rannsóknarspurningum.')}
+    <div class="researchCards">
+      <article><h3>Riðlar</h3><p>Hvaða riðill virðist erfiðastur? Rökstuddu með gögnum.</p></article>
+      <article><h3>Mörk</h3><p>Hvaða lið er með bestu markatöluna þegar úrslit eru komin?</p></article>
+      <article><h3>Heimsálfur</h3><p>Hvaða heimsálfa á flest lið á mótinu?</p></article>
+      <article><h3>Sagan</h3><p>Hvaða þjóðir hafa oftast orðið heimsmeistarar?</p></article>
+    </div>
+    <h3>Veldu eina rannsóknarspurningu</h3>${lineBlock(2)}
+    <h3>Gögn sem ég notaði</h3>${lineBlock(4)}
+    <h3>Niðurstaða mín</h3>${lineBlock(5)}`;
+}
+function posterTask(){
+  const t = selectedTeamA();
+  return `${taskHeader('Stuðningsplakat: Áfram ' + t.name + '!', 'Búðu til plakat með staðreyndum, slagorði og HM-spá.')}
+    <div class="posterBox">
+      <img src="${t.flag}" alt="Fáni ${t.name}">
+      <div><h2>Áfram ${t.name}!</h2><p>${t.fact || ''}</p></div>
+    </div>
+    <h3>Settu á plakatið</h3>
+    <ol class="taskList">
+      <li>3 staðreyndir um landið.</li>
+      <li>1 slagorð eða stuðningshróp.</li>
+      <li>1 spá um gengi þjóðarinnar.</li>
+      <li>Teiknaðu tákn, búning eða fótboltahetju.</li>
+    </ol>
+    <div class="posterCanvas">Teiknisvæði / hugmynd að plakati</div>`;
+}
+function renderTask(){
+  const type = $('taskType').value;
+  const map = {country:countryTask, compare:compareTask, news:newsTask, research:researchTask, poster:posterTask};
+  $('taskContent').innerHTML = map[type]();
+  renderTips(type);
+}
+function renderTips(type){
+  const tips = {
+    country:'Hentar vel sem 20–30 mínútna einstaklingsverkefni. Nemendur geta síðan kynnt þjóðina í 1 mínútu.',
+    compare:'Gott í pörum. Láttu nemendur velja eina stóra og eina litla þjóð eða tvær þjóðir úr sama riðli.',
+    news:'Frábært í íslensku eða ensku. Nemendur skrifa eins og íþróttafréttamenn.',
+    research:'Gott í stærðfræði og samfélagsfræði. Nemendur þurfa að nota gögn, ekki bara ágiskanir.',
+    poster:'Skapandi verkefni fyrir yngri nemendur eða sem lokaverkefni eftir þjóðarspjald.'
+  };
+  $('teacherTipContent').innerHTML = `<p>${tips[type]}</p><p><strong>Ábending:</strong> Prentaðu verkefnið eða sýndu það á skjá og láttu nemendur vinna í stílabók eða Google Docs.</p>`;
+}
+function saveWorkspace(){
+  const state = {type:$('taskType').value, teamA:$('teamA').value, teamB:$('teamB').value, match:$('matchPick').value, savedAt:new Date().toISOString()};
+  localStorage.setItem(TASK_KEY, JSON.stringify(state));
+  alert('Verkefnastillingar vistaðar í þessum vafra.');
+}
+function restoreWorkspace(){
+  try{
+    const s = JSON.parse(localStorage.getItem(TASK_KEY));
+    if(!s) return;
+    $('taskType').value = s.type || 'country';
+    if(s.teamA) $('teamA').value = s.teamA;
+    if(s.teamB) $('teamB').value = s.teamB;
+    if(s.match) $('matchPick').value = s.match;
+  }catch(e){}
+}
+function randomPick(kind){
+  if(kind === 'country') $('teamA').value = teams[Math.floor(Math.random()*teams.length)].id;
+  if(kind === 'compare'){
+    const a = Math.floor(Math.random()*teams.length);
+    let b = Math.floor(Math.random()*teams.length); if(a===b) b=(b+1)%teams.length;
+    $('taskType').value='compare'; $('teamA').value=teams[a].id; $('teamB').value=teams[b].id;
+  }
+  if(kind === 'match'){
+    $('taskType').value='news'; $('matchPick').value = String(Math.floor(Math.random()*matches.length));
+  }
+  renderTask();
+}
+async function init(){
+  await loadData(); fillSelects(); restoreWorkspace(); renderTask();
+  ['taskType','teamA','teamB','matchPick'].forEach(id=>$(id).addEventListener('change', renderTask));
+  $('printTaskBtn').addEventListener('click', ()=>window.print());
+  $('saveTaskBtn').addEventListener('click', saveWorkspace);
+  $('clearTaskBtn').addEventListener('click', ()=>{ localStorage.removeItem(TASK_KEY); location.reload(); });
+  document.querySelectorAll('[data-random]').forEach(b=>b.addEventListener('click', ()=>randomPick(b.dataset.random)));
+}
+init().catch(err=>{ $('taskContent').innerHTML = `<h2>Villa</h2><p>Gat ekki hlaðið gögnum. Keyrðu vefinn með <code>python -m http.server 8000</code>.</p><pre>${err}</pre>`; });
+</script>
+</body>
+</html>
