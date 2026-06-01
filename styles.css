@@ -84,3 +84,31 @@ main{margin:0 auto 0;}
   .writeLines span{border-bottom:1px solid #111827;}
   a{color:#111827!important; text-decoration:none;}
 }
+
+/* HM-stofan v0.6 - Kennaraborð Deluxe */
+.dashboardHero .heroContent, .taskHero .heroContent { max-width: 1120px; }
+.teacherDashboardPreview { border: 2px solid rgba(255,255,255,.16); }
+.dashboardActionsPanel .hint { margin-top: 14px; }
+.dashboardActions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.dashboardGrid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(280px, .8fr); gap: 22px; align-items: start; }
+.compactHead { margin-bottom: 14px; }
+.teacherControls { display: grid; gap: 12px; margin-bottom: 16px; }
+.teacherControls label { display:grid; gap:7px; font-weight: 800; }
+.teacherControls select { padding: 12px 14px; border-radius: 14px; border: 1px solid rgba(15,23,42,.15); font: inherit; }
+.teacherPrintSheet, .dailyTaskBox { background: rgba(255,255,255,.82); border: 1px solid rgba(15,23,42,.12); border-radius: 22px; padding: 22px; }
+.printHeader { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-bottom:16px; }
+.printHeader img { width: 130px; max-height: 90px; object-fit: contain; filter: drop-shadow(0 8px 18px rgba(0,0,0,.12)); }
+.printHeader h2 { margin: 0 0 6px; font-size: clamp(2rem, 4vw, 3.2rem); }
+.teacherFactGrid { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:10px; margin: 14px 0 18px; }
+.teacherFactGrid span { background: rgba(255,255,255,.72); border:1px solid rgba(15,23,42,.1); border-radius: 14px; padding: 12px; }
+.teacherFactGrid b { display:block; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color: var(--muted); margin-bottom:4px; }
+.printMatchList { display:grid; gap:8px; margin: 10px 0 18px; }
+.printMatchList div { background: rgba(248,250,252,.9); border: 1px solid rgba(15,23,42,.1); border-radius:14px; padding: 10px 12px; }
+.printMatchList span, .printMatchList small { display:block; color: var(--muted); }
+.dailyCountry { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+.dailyCountry img { width: 90px; max-height: 64px; object-fit: contain; border-radius: 12px; background: white; padding: 6px; box-shadow: 0 10px 20px rgba(15,23,42,.12); }
+.dailyTaskItems { display:grid; gap:10px; }
+.dailyTaskItems article { background: rgba(248,250,252,.9); border: 1px solid rgba(15,23,42,.1); border-radius:16px; padding: 12px; }
+.dailyTaskItems b { display:block; margin-bottom:4px; }
+.fullBtn { width:100%; justify-content:center; text-align:center; }
+@media (max-width: 920px){ .dashboardGrid { grid-template-columns:1fr; } .teacherFactGrid { grid-template-columns:1fr; } .dashboardActions { align-items: stretch; } .dashboardActions > * { flex: 1 1 220px; } }

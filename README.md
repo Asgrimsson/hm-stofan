@@ -84,3 +84,29 @@ Prófa:
 https://hmusa.netlify.app/
 https://hmusa.netlify.app/verkefni.html
 ```
+
+
+## v0.6 — Kennaraborð Deluxe
+
+Bætt við `kennarabord.html` og `print.css`.
+
+Nýtt:
+
+- Kennaraborð með flýtileiðum í Live skjá, verkefni og þjóðir.
+- Prentanlegt A4 þjóðarspjald fyrir allar 48 þjóðir.
+- Verkefni dagsins: þjóð, spurning, rannsókn, skapandi áskorun og útgöngumiði.
+- CSV útflutningur úr spáleik sem virkar úr localStorage í vafranum.
+- Hnappur til að hreinsa spáleik í þessum vafra.
+
+Prófun local:
+
+```cmd
+cd C:\hm-stofan-v01
+python -m http.server 8000
+```
+
+Opna:
+
+```text
+http://localhost:8000/kennarabord.html
+```

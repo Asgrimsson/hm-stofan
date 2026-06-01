@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HM-stofan 2026 · Kennaraborð Deluxe</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="print.css" media="print">
+</head>
+<body class="teacherDashboardPage">
+  <header class="hero dashboardHero">
+    <nav class="topbar">
+      <div class="brand"><span class="ball">⚽</span><span>HM-stofan 2026</span></div>
+      <div class="navlinks">
+        <a href="index.html">Forsíða</a>
+        <a href="verkefni.html">Verkefni</a>
+        <a href="skjar.html" target="_blank" rel="noopener">Live skjár</a>
+        <a href="index.html#predictions">Spáleikur</a>
+      </div>
+    </nav>
+    <section class="heroContent">
+      <p class="eyebrow">HM-stofan v0.6</p>
+      <h1>Kennaraborð Deluxe</h1>
+      <p class="lead">Veldu þjóð, búðu til prentanlegt þjóðarspjald, opnaðu skjáham og fáðu verkefni dagsins með einum smelli.</p>
+      <div class="heroStats">
+        <div><strong>A4</strong><span>þjóðarspjöld</span></div>
+        <div><strong>CSV</strong><span>topplisti</span></div>
+        <div><strong>1 smellur</strong><span>verkefni dagsins</span></div>
+        <div><strong>48</strong><span>þjóðir</span></div>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="panel dashboardActionsPanel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Flýtileiðir kennara</p>
+          <h2>Stjórnborð fyrir kennslustundina</h2>
+        </div>
+      </div>
+      <div class="dashboardActions">
+        <a class="primaryBtn linkBtn" href="skjar.html" target="_blank" rel="noopener">Opna Live skjá</a>
+        <a class="ghostBtn linkBtn" href="verkefni.html">Opna verkefnamiðstöð</a>
+        <a class="ghostBtn linkBtn" href="index.html#teams">Skoða þjóðir</a>
+        <button class="ghostBtn" id="downloadCsvBtn" type="button">Sækja topplista CSV</button>
+        <button class="dangerBtn" id="clearPredBtn" type="button">Hreinsa spáleik í þessum vafra</button>
+      </div>
+      <p class="hint">Spáleikurinn er vistaður í vafranum með localStorage. CSV útflutningur virkar því á þeirri tölvu/vafra þar sem spárnar voru skráðar.</p>
+    </section>
+
+    <section class="dashboardGrid">
+      <article class="panel">
+        <div class="sectionHead compactHead">
+          <div>
+            <p class="eyebrow">Þjóðarspjald</p>
+            <h2>Veldu þjóð og prentaðu</h2>
+          </div>
+        </div>
+        <div class="teacherControls">
+          <label>Veldu þjóð
+            <select id="countryPick"></select>
+          </label>
+          <div class="buttonRow">
+            <button class="primaryBtn" id="printCountryBtn" type="button">Prenta þjóðarspjald</button>
+            <button class="ghostBtn" id="randomCountryBtn" type="button">Velja handahófskennt</button>
+          </div>
+        </div>
+        <div id="countryPrintSheet" class="printSheet teacherPrintSheet">Hleð þjóð...</div>
+      </article>
+
+      <aside class="panel dayTaskPanel">
+        <p class="eyebrow">Verkefni dagsins</p>
+        <h2>Tilbúið verkefni fyrir skjá eða töflu</h2>
+        <div id="dailyTaskBox" class="dailyTaskBox">Hleð verkefni dagsins...</div>
+        <div class="buttonRow">
+          <button class="ghostBtn" id="newDailyTaskBtn" type="button">Endurvelja verkefni</button>
+          <button class="ghostBtn" id="printDailyBtn" type="button">Prenta verkefni dagsins</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="panel">
+      <div class="sectionHead">
+        <div>
+          <p class="eyebrow">Kennsluhugmyndir</p>
+          <h2>Skemmtileg notkun í tímum</h2>
+        </div>
+      </div>
+      <div class="teacherGrid">
+        <article><h3>5 mínútna upphitun</h3><p>Opnaðu verkefni dagsins og láttu nemendur svara spurningu dagsins í pörum.</p></article>
+        <article><h3>20 mínútna rannsókn</h3><p>Veldu þjóð, prentaðu þjóðarspjald og láttu nemendur bera landið saman við Ísland.</p></article>
+        <article><h3>Í lok tímans</h3><p>Nemendur skrifa eina staðreynd, eina spurningu og eina spá í útgöngumiða.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>HM-stofan v0.6 · Kennaraborð Deluxe · Prentanleg þjóðarspjöld · CSV útflutningur · Verkefni dagsins</p>
+  </footer>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let teams = [], matches = [], history = [];
+const PRED_KEY = 'hm_stofan_v03_predictions';
+const PLAYER_KEY = 'hm_stofan_v03_active_player';
+
+async function fetchJson(url){
+  const r = await fetch(url, {cache:'no-store'});
+  if(!r.ok) throw new Error(url);
+  return await r.json();
+}
+async function loadData(){
+  try{
+    const snap = await fetchJson('data/live/snapshot.json');
+    if(snap?.teams && snap?.matches){
+      teams = snap.teams; matches = snap.matches; history = snap.history || [];
+      return;
+    }
+  }catch(e){}
+  teams = await fetchJson('data/teams.json');
+  matches = await fetchJson('data/matches.json');
+  try{ history = await fetchJson('data/history.json'); }catch(e){ history = []; }
+}
+function team(id){ return teams.find(t=>t.id===id) || teams[0] || {}; }
+function fmtDate(iso){
+  if(!iso) return 'Dagsetning kemur síðar';
+  const base = iso.includes('T') ? iso : iso + 'T12:00:00';
+  return new Date(base).toLocaleDateString('is-IS', {day:'numeric', month:'long', year:'numeric'});
+}
+function todayKey(offset=0){
+  const d = new Date(); d.setDate(d.getDate()+offset);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function seededIndex(length, salt=''){
+  if(!length) return 0;
+  const key = todayKey() + salt;
+  let n = 0;
+  for(const ch of key) n = (n * 31 + ch.charCodeAt(0)) % 100000;
+  return n % length;
+}
+function fillCountrySelect(){
+  $('countryPick').innerHTML = teams.map(t=>`<option value="${t.id}">${t.name} · Riðill ${t.group}</option>`).join('');
+}
+function findTeamMatches(tid){
+  return matches.filter(m=>m.home===tid || m.away===tid).slice(0,4);
+}
+function scoreText(m){
+  return m.homeScore == null || m.awayScore == null ? 'Bíður úrslita' : `${m.homeScore}–${m.awayScore}`;
+}
+function countrySheet(t){
+  const teamMatches = findTeamMatches(t.id);
+  return `<div class="printHeader">
+    <div><p class="eyebrow">HM-stofan þjóðarspjald</p><h2>${t.name}</h2><p>${t.fact || ''}</p></div>
+    <img src="${t.flag}" alt="Fáni ${t.name}">
+  </div>
+  <div class="teacherFactGrid">
+    <span><b>Höfuðborg</b>${t.capital || '-'}</span>
+    <span><b>Íbúafjöldi</b>${t.population || '-'}</span>
+    <span><b>Heimsálfa</b>${t.continent || '-'}</span>
+    <span><b>Tungumál</b>${t.languages || '-'}</span>
+    <span><b>Gjaldmiðill</b>${t.currency || '-'}</span>
+    <span><b>Atvinnugreinar</b>${t.industries || '-'}</span>
+    <span><b>Riðill</b>${t.group || '-'}</span>
+    <span><b>Besti HM-árangur</b>${t.wcBest || '-'}</span>
+  </div>
+  <h3>Leikir þjóðarinnar</h3>
+  <div class="printMatchList">
+    ${teamMatches.map(m=>`<div><span>${fmtDate(m.date)}</span><strong>${team(m.home).name} ${scoreText(m)} ${team(m.away).name}</strong><small>Riðill ${m.group} · ${m.venue || ''}</small></div>`).join('') || '<p>Leikir koma síðar.</p>'}
+  </div>
+  <h3>Verkefni fyrir nemendur</h3>
+  <ol class="taskList">
+    <li>Finndu landið á korti og merktu höfuðborgina.</li>
+    <li>Skrifaðu 5 staðreyndir um ${t.name}.</li>
+    <li>Berðu ${t.name} saman við Ísland. Finndu 3 líkindi og 3 atriði sem eru ólík.</li>
+    <li>Hvernig heldur þú að þjóðinni gangi á HM? Rökstuddu með tveimur setningum.</li>
+    <li>Búðu til eina spurningu um þjóðina fyrir bekkinn.</li>
+  </ol>
+  <h3>Svör / glósur</h3>
+  <div class="writeLines"><span></span><span></span><span></span><span></span><span></span></div>`;
+}
+function renderCountrySheet(){
+  const t = team($('countryPick').value);
+  $('countryPrintSheet').innerHTML = countrySheet(t);
+}
+const questions = [
+  'Hvaða þjóð hefur oftast orðið heimsmeistari?',
+  'Hvaða lið í riðlinum gæti komið mest á óvart?',
+  'Hvað segir íbúafjöldi okkur ekki um gengi í fótbolta?',
+  'Hvaða atvinnugreinar eru mikilvægar í þjóð dagsins?',
+  'Hvernig getur fótbolti tengst menningu og sögu lands?',
+  'Hvaða gögn þarftu til að segja að riðill sé erfiður?',
+  'Hvaða þjóð myndir þú vilja heimsækja og hvers vegna?'
+];
+const creativeTasks = [
+  'Búðu til stuðningsslagorð fyrir þjóðina.',
+  'Teiknaðu nýjan varabúning fyrir þjóðina.',
+  'Skrifaðu 4 línu stuðningslag fyrir þjóðina.',
+  'Búðu til fréttafyrirsögn um næsta leik þjóðarinnar.',
+  'Hannaðu lítið merki fyrir aðdáendaklúbb þjóðarinnar.'
+];
+const researchTasks = [
+  'Berðu þjóðina saman við Ísland eftir íbúafjölda, tungumáli og atvinnugreinum.',
+  'Skoðaðu leikjadagskrána og spáðu í stigafjölda þjóðarinnar.',
+  'Finndu hvað þjóðin þarf að gera til að komast áfram úr riðlinum.',
+  'Skoðaðu HM-söguna og finndu hvort þjóðin hefur verið nálægt titli.',
+  'Berðu saman tvær þjóðir úr sama riðli og rökstuddu hvor er líklegri til að vinna.'
+];
+function renderDailyTask(force=false){
+  const offset = force ? Math.floor(Math.random()*365) : 0;
+  const t = teams[(seededIndex(teams.length, 'country') + offset) % teams.length];
+  const q = questions[(seededIndex(questions.length, 'question') + offset) % questions.length];
+  const c = creativeTasks[(seededIndex(creativeTasks.length, 'creative') + offset) % creativeTasks.length];
+  const r = researchTasks[(seededIndex(researchTasks.length, 'research') + offset) % researchTasks.length];
+  $('dailyTaskBox').innerHTML = `<div class="dailyCountry"><img src="${t.flag}" alt=""><div><p class="eyebrow">Þjóð dagsins</p><h3>${t.name}</h3><p>${t.capital || ''} · ${t.population || ''} · Riðill ${t.group || ''}</p></div></div>
+    <div class="dailyTaskItems">
+      <article><b>Spurning dagsins</b><p>${q}</p></article>
+      <article><b>Rannsókn</b><p>${r}</p></article>
+      <article><b>Skapandi áskorun</b><p>${c}</p></article>
+      <article><b>Útgöngumiði</b><p>Skrifaðu eina staðreynd, eina spurningu og eina spá áður en tíminn endar.</p></article>
+    </div>`;
+}
+function loadPredStore(){
+  try { return JSON.parse(localStorage.getItem(PRED_KEY)) || {players:{}}; }
+  catch(e){ return {players:{}}; }
+}
+function matchId(m, idx){ return m.id || `${m.group}-${m.home}-${m.away}-${m.date || idx}`; }
+function isFinished(m){ return m.homeScore !== null && m.awayScore !== null && m.homeScore !== undefined && m.awayScore !== undefined; }
+function resultSign(a,b){ return a>b ? 'H' : a<b ? 'A' : 'D'; }
+function calcPredictionScore(pred, m){
+  if(!pred || !isFinished(m)) return 0;
+  const ph = Number(pred.homeScore), pa = Number(pred.awayScore);
+  if(Number.isNaN(ph) || Number.isNaN(pa)) return 0;
+  if(ph === Number(m.homeScore) && pa === Number(m.awayScore)) return 3;
+  return resultSign(ph,pa) === resultSign(Number(m.homeScore), Number(m.awayScore)) ? 1 : 0;
+}
+function playerTotals(player){
+  const preds = player.predictions || {};
+  let points = 0, exact = 0, outcome = 0, waiting = 0, totalPreds = Object.keys(preds).length;
+  matches.forEach((m, idx)=>{
+    const pred = preds[matchId(m, idx)];
+    if(!pred) return;
+    if(!isFinished(m)){ waiting++; return; }
+    const score = calcPredictionScore(pred, m);
+    points += score;
+    if(score === 3) exact++;
+    if(score === 1) outcome++;
+  });
+  return {points, exact, outcome, waiting, totalPreds};
+}
+function downloadCsv(){
+  const store = loadPredStore();
+  const rows = Object.values(store.players || {}).map(p=>({p, totals:playerTotals(p)}))
+    .sort((a,b)=>b.totals.points-a.totals.points || a.p.name.localeCompare(b.p.name,'is'));
+  const header = ['Nafn','Bekkur/hópur','Stig','Spár','Nákvæmar','Réttur sigurvegari/jafntefli','Bíður úrslita'];
+  const csv = [header, ...rows.map(r=>[r.p.name, r.p.className || '', r.totals.points, r.totals.totalPreds, r.totals.exact, r.totals.outcome, r.totals.waiting])]
+    .map(row=>row.map(v=>`"${String(v).replaceAll('"','""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `hm-stofan-topplisti-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(a.href);
+}
+function setup(){
+  fillCountrySelect();
+  renderCountrySheet();
+  renderDailyTask();
+  $('countryPick').addEventListener('change', renderCountrySheet);
+  $('randomCountryBtn').addEventListener('click', ()=>{ $('countryPick').value = teams[Math.floor(Math.random()*teams.length)].id; renderCountrySheet(); });
+  $('printCountryBtn').addEventListener('click', ()=>{ document.body.dataset.printMode='country'; window.print(); delete document.body.dataset.printMode; });
+  $('newDailyTaskBtn').addEventListener('click', ()=>renderDailyTask(true));
+  $('printDailyBtn').addEventListener('click', ()=>{ document.body.dataset.printMode='daily'; window.print(); delete document.body.dataset.printMode; });
+  $('downloadCsvBtn').addEventListener('click', downloadCsv);
+  $('clearPredBtn').addEventListener('click', ()=>{
+    if(confirm('Viltu örugglega hreinsa spáleik í þessum vafra?')){
+      localStorage.removeItem(PRED_KEY); localStorage.removeItem(PLAYER_KEY); alert('Spáleikur hreinsaður í þessum vafra.');
+    }
+  });
+}
+loadData().then(setup).catch(err=>{
+  document.querySelector('main').innerHTML = `<section class="panel"><h2>Villa við að hlaða gögnum</h2><p>Keyrðu vefinn með <code>python -m http.server 8000</code>.</p><pre>${err}</pre></section>`;
+});
+</script>
+</body>
+</html>

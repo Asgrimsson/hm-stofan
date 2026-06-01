@@ -1,0 +1,23 @@
+@page { size: A4; margin: 12mm; }
+body { background: #fff !important; color: #111 !important; }
+.topbar, .hero, footer, .dashboardActionsPanel, .teacherControls, .dayTaskPanel .buttonRow, .navlinks, .sectionHead .buttonRow, .teacherGrid, .dashboardActions { display: none !important; }
+main { width: 100% !important; margin: 0 !important; padding: 0 !important; }
+.panel, .printSheet, .teacherPrintSheet { box-shadow: none !important; border: none !important; background: #fff !important; padding: 0 !important; margin: 0 !important; }
+.dashboardGrid { display: block !important; }
+body[data-print-mode="country"] .dayTaskPanel, body[data-print-mode="country"] main > section:not(.dashboardGrid) { display: none !important; }
+body[data-print-mode="daily"] .dashboardGrid > article, body[data-print-mode="daily"] main > section:not(.dashboardGrid) { display: none !important; }
+.printHeader { display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 3px solid #111; padding-bottom: 12px; margin-bottom: 16px; }
+.printHeader img { width: 120px; max-height: 80px; object-fit: contain; border: 1px solid #ddd; }
+.printHeader h2 { font-size: 34px; margin: 0 0 6px; }
+.teacherFactGrid, .taskFacts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 14px 0; }
+.teacherFactGrid span, .taskFacts span { border: 1px solid #ccc; padding: 8px; border-radius: 8px; break-inside: avoid; }
+.teacherFactGrid b, .taskFacts b { display:block; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+.printMatchList div { border: 1px solid #ddd; padding: 8px; margin: 6px 0; border-radius: 8px; }
+.printMatchList span, .printMatchList small { display:block; color:#333; }
+.taskList { line-height: 1.45; }
+.writeLines span { display:block; border-bottom: 1px solid #999; height: 28px; }
+.dailyTaskBox { border: none !important; box-shadow: none !important; padding: 0 !important; }
+.dailyCountry { display:flex; gap:16px; align-items:center; border-bottom:3px solid #111; padding-bottom:12px; margin-bottom:16px; }
+.dailyCountry img { width:110px; max-height:75px; border:1px solid #ddd; }
+.dailyTaskItems { display:grid; grid-template-columns:1fr; gap:10px; }
+.dailyTaskItems article { border:1px solid #bbb; border-radius:10px; padding:12px; break-inside: avoid; }
