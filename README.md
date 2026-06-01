@@ -152,3 +152,10 @@ Ný síða: `heimskort.html`
 - Prentanleg landafræðiverkefni.
 
 Einnig er lagaður bakgrunnur í `leikjasalur.html` þannig að spurningar, svarmöguleikar og stigakassar séu læsilegir.
+
+
+## v0.8.1
+
+- Lagað heimskort: kortaleiðangur færist neðar og löndum er dreift betur svo fánar klístrist síður saman.
+- Bætt við `leikmenn.html` fyrir leikmannalista liðanna.
+- Bætt við `data/players.json` sem er tilbúin gagnaskrá fyrir opinbera leikmannalista.

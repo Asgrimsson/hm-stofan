@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="is">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leikmenn · HM-stofan 2026</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="playersBody">
+  <header class="subHero playersHero">
+    <nav class="topbar">
+      <div class="brand"><span class="ball">👕</span><span>HM Leikmenn</span></div>
+      <div class="navlinks">
+        <a href="index.html">Forsíða</a>
+        <a href="heimskort.html">Heimskort</a>
+        <a href="leikjasalur.html">Leikjasalur</a>
+        <a href="verkefni.html">Verkefni</a>
+        <a href="kennarabord.html">Kennaraborð</a>
+      </div>
+    </nav>
+    <section class="heroContent compactHero">
+      <p class="eyebrow">v0.8.1 · Leikmannalistar</p>
+      <h1>Leikmannalistar liðanna</h1>
+      <p class="lead">Veldu lið, skoðaðu hópinn og prentaðu leikmannablað. Síðan er tilbúin fyrir opinbera leikmannalista þegar þeir eru staðfestir.</p>
+    </section>
+  </header>
+
+  <main>
+    <section class="playersLayout">
+      <aside class="panel teamPickerPanel">
+        <p class="eyebrow">Lið</p>
+        <h2>Veldu þjóð</h2>
+        <div class="playerControls">
+          <label>Leita
+            <input id="playerSearch" type="search" placeholder="Leita að liði...">
+          </label>
+          <label>Riðill
+            <select id="playerGroup"><option value="all">Allir riðlar</option></select>
+          </label>
+        </div>
+        <div id="teamMiniList" class="teamListMini"></div>
+      </aside>
+
+      <section class="panel playerMainPanel">
+        <div id="playerView" class="emptyPlayers">
+          <h2>Veldu lið til að skoða leikmenn</h2>
+          <p>Þessi síða les gögn úr <code>data/players.json</code>. Þar er hægt að setja inn leikmenn eftir stöðum: markmenn, varnarmenn, miðjumenn og sóknarmenn.</p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <p>HM-stofan v0.8.1 · Leikmannalistar · Prentvæn liðablöð</p>
+  </footer>
+
+  <script>
+    let teams = [];
+    let rosters = [];
+    let currentId = null;
+    const $ = id => document.getElementById(id);
+    const POS = {
+      GK:'Markmenn', DF:'Varnarmenn', MF:'Miðjumenn', FW:'Sóknarmenn'
+    };
+    async function loadJson(path, fallback){
+      try{ const r = await fetch(path,{cache:'no-store'}); if(!r.ok) throw new Error(path); return await r.json(); }catch(e){ return fallback; }
+    }
+    async function init(){
+      teams = await loadJson('data/teams.json', []);
+      rosters = await loadJson('data/players.json', []);
+      setupGroups(); renderTeamList();
+      $('playerSearch').addEventListener('input', renderTeamList);
+      $('playerGroup').addEventListener('change', renderTeamList);
+      if(teams[0]) selectTeam(teams[0].id);
+    }
+    function setupGroups(){
+      const groups = [...new Set(teams.map(t=>t.group))].sort();
+      $('playerGroup').innerHTML += groups.map(g=>`<option value="${g}">Riðill ${g}</option>`).join('');
+    }
+    function rosterFor(id){
+      return rosters.find(r=>r.id===id) || {id, status:'bíður staðfestingar', players:[]};
+    }
+    function renderTeamList(){
+      const q = $('playerSearch').value.trim().toLowerCase();
+      const g = $('playerGroup').value;
+      $('teamMiniList').innerHTML = teams.filter(t=> (g==='all'||t.group===g) && (!q || t.name.toLowerCase().includes(q) || t.english.toLowerCase().includes(q))).map(t=>`
+        <button class="teamMiniBtn ${t.id===currentId?'active':''}" type="button" onclick="selectTeam('${t.id}')">
+          <img src="${t.flag}" alt=""><span>${t.name}<br><small>Riðill ${t.group}</small></span>
+        </button>`).join('');
+    }
+    window.selectTeam = function(id){
+      currentId = id; renderTeamList();
+      const t = teams.find(x=>x.id===id); const r = rosterFor(id);
+      const players = r.players || [];
+      const byPos = Object.keys(POS).map(pos=>({pos, list:players.filter(p=>p.position===pos)}));
+      const playerHtml = players.length ? `<div class="playersGrid">${byPos.map(group=>`
+        <article class="positionBox"><h3>${POS[group.pos]}</h3><div class="playerList">
+          ${group.list.length ? group.list.map(p=>`<div class="playerRow"><div class="playerNumber">${p.number||''}</div><div><div class="playerName">${p.name}</div><div class="playerClub">${p.club||''}</div></div></div>`).join('') : '<p class="smallNote">Enginn leikmaður skráður í þessum flokki.</p>'}
+        </div></article>`).join('')}</div>` : `<div class="emptyPlayers"><h3>Leikmannalisti bíður staðfestingar</h3><p>Þegar opinber listi liggur fyrir er hægt að bæta leikmönnum í <code>data/players.json</code>. Síðan birtir þá sjálfkrafa eftir stöðum.</p><textarea class="rosterTextarea" readonly>{
+  "number": 10,
+  "name": "Nafn leikmanns",
+  "position": "FW",
+  "club": "Félag"
+}</textarea></div>`;
+      $('playerView').innerHTML = `
+        <div class="playerHeaderCard">
+          <img src="${t.flag}" alt="Fáni ${t.name}">
+          <div><p class="eyebrow">Riðill ${t.group}</p><h2>${t.name}</h2><p>${t.fact||''}</p></div>
+          <div class="statusPill">${r.status || 'staða óþekkt'}</div>
+        </div>
+        <div class="playerMetaGrid">
+          <span><b>Höfuðborg</b>${t.capital}</span>
+          <span><b>Íbúafjöldi</b>${t.population}</span>
+          <span><b>HM-saga</b>${t.wcBest}</span>
+          <span><b>Skráðir leikmenn</b>${players.length}</span>
+        </div>
+        <div class="playerActions buttonRow"><button class="primaryBtn" type="button" onclick="window.print()">Prenta liðablað</button><a class="ghostBtn linkBtn" href="kennarabord.html">Kennaraborð</a></div>
+        ${playerHtml}
+        <p class="playersNote">Athugið: leikmannahópar eru mjög tímanæmir. Notið opinberar heimildir þegar leikmannalistar eru settir inn.</p>`;
+    }
+    init();
+  </script>
+</body>
+</html>

@@ -14,12 +14,13 @@
         <a href="index.html">Forsíða</a>
         <a href="verkefni.html">Verkefni</a>
         <a href="leikjasalur.html">Leikjasalur</a>
+        <a href="leikmenn.html">Leikmenn</a>
         <a href="kennarabord.html">Kennaraborð</a>
         <a href="skjar.html">Live skjár</a>
       </div>
     </nav>
     <section class="heroContent compactHero">
-      <p class="eyebrow">v0.8 · Landafræðiáskorun</p>
+      <p class="eyebrow">v0.8.1 · Landafræðiáskorun</p>
       <h1>Heimskort með HM-þjóðum</h1>
       <p class="lead">Skoðaðu hvar þátttökuþjóðirnar eru, berðu saman heimsálfur og prófaðu „Finndu landið“ áskorunina.</p>
       <div class="heroStats">
@@ -93,7 +94,7 @@
   </main>
 
   <footer>
-    <p>HM-stofan v0.8 · Heimskort · Landafræðiáskorun · Fjarlægð frá Íslandi</p>
+    <p>HM-stofan v0.8.1 · Heimskort · Landafræðiáskorun · Fjarlægð frá Íslandi</p>
   </footer>
 
   <script>
@@ -136,13 +137,26 @@
       document.querySelectorAll('.countryDot').forEach(el=>el.remove());
       const filter = $('continentFilter').value;
       const q = $('mapSearch').value.trim().toLowerCase();
-      teams.forEach(t=>{
+      const visible = teams.filter(t=>{
         const base = continentBase(t.continent);
-        const show = (filter==='all' || base===filter) && (!q || t.name.toLowerCase().includes(q) || t.english.toLowerCase().includes(q));
-        if(!show) return;
+        return (filter==='all' || base===filter) && (!q || t.name.toLowerCase().includes(q) || t.english.toLowerCase().includes(q));
+      });
+
+      // Dreifir löndum sem liggja mjög þétt saman, sérstaklega í Evrópu og Mið-Austurlöndum.
+      const placed = [];
+      visible.forEach((t, idx)=>{
+        let displayX = Number(t.x), displayY = Number(t.y);
+        let neighbours = placed.filter(p => Math.abs(p.x-displayX) < 5.2 && Math.abs(p.y-displayY) < 4.8).length;
+        if(neighbours){
+          const angle = (neighbours * 137.5 + idx * 17) * Math.PI / 180;
+          const radius = Math.min(8.5, 2.4 + neighbours * 1.15);
+          displayX = Math.max(5, Math.min(95, displayX + Math.cos(angle) * radius));
+          displayY = Math.max(7, Math.min(93, displayY + Math.sin(angle) * radius));
+        }
+        placed.push({x:displayX,y:displayY});
         const btn = document.createElement('button');
         btn.className = 'countryDot';
-        btn.style.left = t.x + '%'; btn.style.top = t.y + '%';
+        btn.style.left = displayX + '%'; btn.style.top = displayY + '%';
         btn.title = `${t.name} · Riðill ${t.group}`;
         btn.innerHTML = `<img src="${t.flag}" alt=""><span>${t.name}</span>`;
         btn.addEventListener('click',()=>selectTeam(t, btn));
